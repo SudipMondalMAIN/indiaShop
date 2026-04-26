@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Methods — indiaShop</title>
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="../static/css/nav.css">
+<style>
+.pm-card { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); }
+.pm-icon { width: 44px; height: 28px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+.pm-icon.visa { background: #1a1f71; color: #fff; }
+.pm-icon.mc { background: linear-gradient(90deg,#eb001b,#f79e1b); color: #fff; }
+.pm-icon.upi { background: #5f259f; color: #fff; }
+.pm-icon.bank { background: #26a541; color: #fff; }
+.pm-info { flex: 1; }
+.pm-label { font-size: 14px; font-weight: 600; }
+.pm-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.default-badge { background: var(--primary-light); color: var(--primary); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="container"></div></nav>
+<div class="page-content">
+<div class="container" style="max-width:600px">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="account.html" style="color:var(--text3)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></a>
+      <div class="fw-700 fs-18">Saved Payment Methods</div>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="openModal()">+ Add New</button>
+  </div>
+
+  <div id="pm-list"></div>
+  <div id="pm-empty" class="empty-state" style="display:none">
+    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <p>No payment methods saved</p>
+    <button class="btn btn-primary" onclick="openModal()">Add Payment Method</button>
+  </div>
+
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="pm-modal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="fw-700 fs-16 mb-4">Add Payment Method</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="input-wrap">
+        <label>Payment Type</label>
+        <select id="pm-type" onchange="toggleFields()">
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="bank">Net Banking</option>
+        </select>
+      </div>
+      <div id="upi-fields">
+        <div class="input-wrap"><label>UPI ID</label><input type="text" id="upi-id" placeholder="yourname@bank"></div>
+      </div>
+      <div id="card-fields" style="display:none">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="input-wrap"><label>Cardholder Name</label><input type="text" id="card-name" placeholder="Name on card"></div>
+          <div class="input-wrap"><label>Card Number (last 4)</label><input type="text" id="card-number" placeholder="XXXX" maxlength="4"></div>
+          <div class="grid-2">
+            <div class="input-wrap"><label>Expiry</label><input type="text" id="card-exp" placeholder="MM/YY" maxlength="5"></div>
+            <div class="input-wrap"><label>Card Type</label>
+              <select id="card-type"><option value="visa">Visa</option><option value="mastercard">Mastercard</option><option value="rupay">RuPay</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="bank-fields" style="display:none">
+        <div class="input-wrap"><label>Bank Name</label><input type="text" id="bank-name" placeholder="e.g. SBI, HDFC"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="pm-default" style="accent-color:var(--primary)"> Set as default
+      </label>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:20px">
+      <button class="btn btn-outline flex-1" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary flex-1" id="save-pm-btn" onclick="savePayment()">Save</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav"></nav>
+<script src="../static/js/main.js"></script>
+<script>
+  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+  buildNavbar('account');
+
+  function toggleFields() {
+    const type = document.getElementById('pm-type').value;
+    document.getElementById('upi-fields').style.display = type === 'upi' ? '' : 'none';
+    document.getElementById('card-fields').style.display = type === 'card' ? '' : 'none';
+    document.getElementById('bank-fields').style.display = type === 'bank' ? '' : 'none';
+  }
+
+  function openModal() { document.getElementById('pm-modal').style.display = 'flex'; }
+  function closeModal() { document.getElementById('pm-modal').style.display = 'none'; }
+
+  async function loadPayments() {
+    try {
+      const data = await api('GET', '/payment-methods');
+      const list = document.getElementById('pm-list');
+      const pms = data.payment_methods || [];
+      if (!pms.length) { list.innerHTML = ''; document.getElementById('pm-empty').style.display = 'block'; return; }
+      document.getElementById('pm-empty').style.display = 'none';
+      list.innerHTML = pms.map(pm => {
+        const iconClass = pm.type === 'card' ? (pm.card_type || 'visa') : pm.type === 'upi' ? 'upi' : 'bank';
+        const iconText = pm.type === 'upi' ? 'UPI' : pm.type === 'bank' ? 'NET' : (pm.card_type || 'CARD').toUpperCase().slice(0,4);
+        const label = pm.type === 'upi' ? pm.upi_id : pm.type === 'card' ? `•••• •••• •••• ${pm.card_last4}` : pm.bank_name;
+        const sub = pm.type === 'card' ? `Expires ${pm.card_expiry} · ${pm.card_name}` : pm.type === 'upi' ? 'UPI Payment' : 'Net Banking';
+        return `
+          <div class="pm-card">
+            <div class="pm-icon ${iconClass}">${iconText}</div>
+            <div class="pm-info">
+              <div class="pm-label">${label} ${pm.is_default ? '<span class="default-badge">Default</span>' : ''}</div>
+              <div class="pm-sub">${sub}</div>
+            </div>
+            <button class="btn btn-ghost btn-sm text-danger" onclick="deletePayment(${pm.id})">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+            </button>
+          </div>`;
+      }).join('');
+    } catch { document.getElementById('pm-list').innerHTML = '<p class="text-muted p-4">Failed to load.</p>'; }
+  }
+
+  async function savePayment() {
+    const type = document.getElementById('pm-type').value;
+    let body = { type, is_default: document.getElementById('pm-default').checked };
+    if (type === 'upi') { body.upi_id = document.getElementById('upi-id').value.trim(); if (!body.upi_id) return toast('Enter UPI ID', 'error'); }
+    else if (type === 'card') {
+      body.card_name = document.getElementById('card-name').value.trim();
+      body.card_last4 = document.getElementById('card-number').value.trim();
+      body.card_expiry = document.getElementById('card-exp').value.trim();
+      body.card_type = document.getElementById('card-type').value;
+      if (!body.card_name || !body.card_last4) return toast('Fill card details', 'error');
+    } else { body.bank_name = document.getElementById('bank-name').value.trim(); if (!body.bank_name) return toast('Enter bank name', 'error'); }
+    const btn = document.getElementById('save-pm-btn');
+    btnLoading(btn, true);
+    try { await api('POST', '/payment-methods', body); closeModal(); loadPayments(); toast('Payment method saved!', 'success'); }
+    catch(e) { toast(e.message, 'error'); }
+    finally { btnLoading(btn, false); }
+  }
+
+  async function deletePayment(id) {
+    if (!confirm('Remove this payment method?')) return;
+    try { await api('DELETE', `/payment-methods/${id}`); loadPayments(); toast('Removed'); }
+    catch(e) { toast(e.message, 'error'); }
+  }
+
+  loadPayments();
+</script>
+</body>
+</html>
