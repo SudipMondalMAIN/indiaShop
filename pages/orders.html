@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Orders — indiaShop</title>
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="../static/css/nav.css">
+<style>
+.order-card { background: var(--surface); border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow-sm); overflow: hidden; }
+.order-header { padding: 12px 16px; background: var(--bg); display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--text3); border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 8px; }
+.order-id { font-weight: 600; color: var(--text); font-family: var(--mono); }
+.order-item { display: flex; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: var(--transition); }
+.order-item:last-child { border-bottom: none; }
+.order-item:hover { background: var(--bg); }
+.order-item img { width: 64px; height: 64px; object-fit: contain; background: var(--bg); border-radius: var(--radius); padding: 4px; flex-shrink: 0; }
+.order-item-info { flex: 1; }
+.order-item-name { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.order-item-price { font-size: 14px; font-weight: 700; color: var(--text); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.status-dot.delivered { background: var(--success); }
+.status-dot.shipped { background: var(--warning); }
+.status-dot.processing { background: var(--primary); }
+.status-dot.cancelled { background: var(--danger); }
+.order-footer { padding: 10px 16px; display: flex; gap: 8px; justify-content: flex-end; }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="container"></div></nav>
+<div class="page-content">
+<div class="container" style="max-width:700px">
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <a href="account.html" style="color:var(--text3)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <div class="fw-700 fs-18">My Orders</div>
+  </div>
+
+  <div class="tabs mb-3">
+    <button class="tab-btn active" onclick="setTab('all',this)">All</button>
+    <button class="tab-btn" onclick="setTab('processing',this)">Processing</button>
+    <button class="tab-btn" onclick="setTab('shipped',this)">Shipped</button>
+    <button class="tab-btn" onclick="setTab('delivered',this)">Delivered</button>
+    <button class="tab-btn" onclick="setTab('cancelled',this)">Cancelled</button>
+  </div>
+
+  <div id="orders-list"></div>
+  <div id="empty-orders" class="empty-state" style="display:none">
+    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <p>No orders found</p>
+    <a href="../index.html" class="btn btn-primary">Start Shopping</a>
+  </div>
+
+</div>
+</div>
+<nav class="bottom-nav"></nav>
+
+<script src="../static/js/main.js"></script>
+<script>
+  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+  buildNavbar('account');
+
+  let activeStatus = 'all';
+
+  function setTab(status, btn) {
+    activeStatus = status;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadOrders();
+  }
+
+  const statusLabel = { processing:'Processing', shipped:'Shipped', delivered:'Delivered', cancelled:'Cancelled', pending:'Pending' };
+  const statusClass = { processing:'primary', shipped:'warning', delivered:'success', cancelled:'danger', pending:'gray' };
+
+  async function loadOrders() {
+    const list = document.getElementById('orders-list');
+    list.innerHTML = `<div class="card p-4"><div class="skeleton" style="height:80px"></div></div>`;
+    try {
+      const params = activeStatus !== 'all' ? `?status=${activeStatus}` : '';
+      const data = await api('GET', `/orders${params}`);
+      const orders = data.orders || [];
+      if (!orders.length) {
+        list.innerHTML = '';
+        document.getElementById('empty-orders').style.display = 'block';
+        return;
+      }
+      document.getElementById('empty-orders').style.display = 'none';
+      list.innerHTML = orders.map(o => `
+        <div class="order-card">
+          <div class="order-header">
+            <div>Order <span class="order-id">#${o.id}</span></div>
+            <div>${new Date(o.created_at).toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'})}</div>
+            <span class="badge badge-${statusClass[o.status] || 'gray'}">${statusLabel[o.status] || o.status}</span>
+          </div>
+          ${(o.items || []).map(item => `
+            <div class="order-item" onclick="window.location='product-detail.html?id=${item.product_id}'">
+              <img src="${item.image || 'https://placehold.co/64x64?text=Img'}" alt="${item.name}">
+              <div class="order-item-info">
+                <div class="order-item-name">${item.name}</div>
+                <div class="text-muted fs-12">Qty: ${item.qty}</div>
+                <div class="order-item-price">${formatPrice(item.price * item.qty)}</div>
+              </div>
+              <div class="status-dot ${o.status}"></div>
+            </div>
+          `).join('')}
+          <div class="order-footer">
+            <div class="fw-600 fs-14">Total: ${formatPrice(o.total_amount)}</div>
+          </div>
+        </div>
+      `).join('');
+    } catch {
+      list.innerHTML = '<p class="text-muted p-4">Failed to load orders.</p>';
+    }
+  }
+
+  loadOrders();
+</script>
+</body>
+</html>
