@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Profile — indiaShop</title>
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="../static/css/nav.css">
+<style>
+.avatar-section { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 28px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); margin-bottom: 20px; }
+.profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.25); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; border: 3px solid rgba(255,255,255,0.5); }
+.avatar-name { color: #fff; font-size: 18px; font-weight: 700; }
+.avatar-email { color: rgba(255,255,255,0.8); font-size: 13px; }
+.form-section { background: var(--surface); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+.form-section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 16px; }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="container"></div></nav>
+<div class="page-content">
+<div class="container" style="max-width:560px">
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <a href="account.html" style="color:var(--text3)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></a>
+    <div class="fw-700 fs-18">Edit Profile</div>
+  </div>
+
+  <div class="avatar-section" id="avatar-section">
+    <div class="profile-avatar" id="avatar-text">?</div>
+    <div class="avatar-name" id="avatar-name">Loading...</div>
+    <div class="avatar-email" id="avatar-email"></div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Personal Information</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="input-wrap">
+        <label>Full Name</label>
+        <input type="text" id="name" placeholder="Your full name">
+      </div>
+      <div class="input-wrap">
+        <label>Phone Number</label>
+        <input type="tel" id="phone" placeholder="10-digit number" maxlength="10">
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="form-section-title">Email Address</div>
+    <div class="input-wrap">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="your@email.com" disabled style="opacity:0.6;cursor:not-allowed">
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-top:8px">Email cannot be changed after registration.</p>
+  </div>
+
+  <button class="btn btn-primary btn-block btn-lg" id="save-btn" onclick="saveProfile()">Save Changes</button>
+
+</div>
+</div>
+<nav class="bottom-nav"></nav>
+
+<script src="../static/js/main.js"></script>
+<script>
+  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+  buildNavbar('account');
+
+  const user = Auth.user();
+  if (user) {
+    document.getElementById('avatar-text').textContent = user.name?.charAt(0)?.toUpperCase() || '?';
+    document.getElementById('avatar-name').textContent = user.name || '';
+    document.getElementById('avatar-email').textContent = user.email || '';
+    document.getElementById('name').value = user.name || '';
+    document.getElementById('phone').value = user.phone || '';
+    document.getElementById('email').value = user.email || '';
+  }
+
+  document.getElementById('name').addEventListener('input', () => {
+    const n = document.getElementById('name').value.trim();
+    document.getElementById('avatar-text').textContent = n?.charAt(0)?.toUpperCase() || '?';
+    document.getElementById('avatar-name').textContent = n;
+  });
+
+  async function saveProfile() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!name) return toast('Name is required', 'error');
+    if (phone && phone.length !== 10) return toast('Enter valid 10-digit phone', 'error');
+    const btn = document.getElementById('save-btn');
+    btnLoading(btn, true);
+    try {
+      const data = await api('PUT', '/users/profile', { name, phone });
+      const updated = { ...user, name, phone };
+      Auth.set(Auth.token(), updated);
+      toast('Profile updated!', 'success');
+    } catch(e) { toast(e.message, 'error'); }
+    finally { btnLoading(btn, false); }
+  }
+</script>
+</body>
+</html>
