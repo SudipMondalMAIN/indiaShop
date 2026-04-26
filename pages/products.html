@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — indiaShop</title>
+<link rel="stylesheet" href="../static/css/style.css">
+<link rel="stylesheet" href="../static/css/nav.css">
+<style>
+.products-layout { display: flex; gap: 16px; align-items: flex-start; }
+.filter-sidebar {
+  width: 220px; flex-shrink: 0; background: var(--surface);
+  border-radius: var(--radius); box-shadow: var(--shadow-sm);
+  position: sticky; top: 70px; overflow: hidden;
+}
+.filter-header { padding: 14px 16px; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.filter-clear { font-size: 12px; color: var(--primary); font-weight: 600; background: none; border: none; cursor: pointer; }
+.filter-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.filter-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 10px; }
+.filter-option { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; font-size: 13px; }
+.filter-option input[type=checkbox] { accent-color: var(--primary); width: 14px; height: 14px; }
+.price-range { display: flex; gap: 8px; align-items: center; }
+.price-range input { width: 80px; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; outline: none; }
+.price-range input:focus { border-color: var(--primary); }
+
+.products-main { flex: 1; min-width: 0; }
+.products-toolbar { background: var(--surface); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); flex-wrap: wrap; gap: 10px; }
+.toolbar-left { font-size: 13px; color: var(--text3); }
+.toolbar-left span { color: var(--text); font-weight: 600; }
+.sort-select { padding: 6px 12px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); outline: none; cursor: pointer; }
+
+.product-card { cursor: pointer; transition: var(--transition); overflow: hidden; }
+.product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.product-img-wrap { position: relative; background: var(--bg); aspect-ratio: 1; overflow: hidden; }
+.product-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform 0.3s ease; }
+.product-card:hover .product-img-wrap img { transform: scale(1.04); }
+.product-disc-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+.product-info { padding: 10px 12px 12px; }
+.product-name { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+.product-brand { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.product-price-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.filter-toggle-btn { display: none; }
+.filter-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 400; }
+.filter-overlay.show { display: block; }
+
+@media (max-width: 768px) {
+  .filter-sidebar { position: fixed; left: -240px; top: 0; bottom: 0; z-index: 500; border-radius: 0; width: 260px; overflow-y: auto; transition: left 0.25s ease; }
+  .filter-sidebar.show { left: 0; }
+  .filter-toggle-btn { display: inline-flex; }
+  .products-layout { display: block; }
+}
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="container"></div></nav>
+
+<div class="page-content">
+<div class="container">
+
+  <div id="filter-overlay" class="filter-overlay" onclick="closeFilter()"></div>
+
+  <div class="products-layout">
+    <!-- Sidebar -->
+    <div class="filter-sidebar" id="filter-sidebar">
+      <div class="filter-header">
+        Filters
+        <button class="filter-clear" onclick="clearFilters()">Clear All</button>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Category</div>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Electronics"> Electronics</label>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Fashion"> Fashion</label>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Home"> Home</label>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Beauty"> Beauty</label>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Books"> Books</label>
+        <label class="filter-option"><input type="checkbox" name="cat" value="Sports"> Sports</label>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Price Range</div>
+        <div class="price-range">
+          <input type="number" id="min-price" placeholder="Min" min="0">
+          <span style="color:var(--text3)">–</span>
+          <input type="number" id="max-price" placeholder="Max" min="0">
+        </div>
+        <button class="btn btn-primary btn-sm w-100 mt-3" onclick="applyFilters()">Apply</button>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-section-title">Rating</div>
+        <label class="filter-option"><input type="radio" name="rating" value="4"> 4★ & above</label>
+        <label class="filter-option"><input type="radio" name="rating" value="3"> 3★ & above</label>
+        <label class="filter-option"><input type="radio" name="rating" value="0" checked> All</label>
+      </div>
+
+      <div class="filter-section" style="border-bottom:none">
+        <div class="filter-section-title">Discount</div>
+        <label class="filter-option"><input type="radio" name="disc" value="50"> 50% or more</label>
+        <label class="filter-option"><input type="radio" name="disc" value="30"> 30% or more</label>
+        <label class="filter-option"><input type="radio" name="disc" value="0" checked> All</label>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="products-main">
+      <div class="products-toolbar">
+        <div class="toolbar-left">
+          <button class="btn btn-outline btn-sm filter-toggle-btn" onclick="openFilter()" style="margin-right:8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+            Filters
+          </button>
+          Showing <span id="result-count">—</span> results <span id="search-label"></span>
+        </div>
+        <select class="sort-select" id="sort-select" onchange="applyFilters()">
+          <option value="">Relevance</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+          <option value="newest">Newest</option>
+        </select>
+      </div>
+
+      <div class="grid-4" id="products-grid"></div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<nav class="bottom-nav"></nav>
+
+<script src="../static/js/main.js"></script>
+<script>
+  buildNavbar();
+  skeletonCards(8, document.getElementById('products-grid'));
+
+  const params = new URLSearchParams(window.location.search);
+  const searchQ = params.get('q') || '';
+  if (searchQ) document.getElementById('search-label').textContent = `for "${searchQ}"`;
+
+  // Pre-select category from URL
+  const catParam = params.get('category');
+  if (catParam) {
+    document.querySelectorAll('input[name=cat]').forEach(cb => { if (cb.value === catParam) cb.checked = true; });
+  }
+
+  let currentPage = 1;
+
+  async function applyFilters(pg = 1) {
+    currentPage = pg;
+    skeletonCards(8, document.getElementById('products-grid'));
+
+    const cats = [...document.querySelectorAll('input[name=cat]:checked')].map(i => i.value);
+    const minP = document.getElementById('min-price').value;
+    const maxP = document.getElementById('max-price').value;
+    const rating = document.querySelector('input[name=rating]:checked')?.value;
+    const disc = document.querySelector('input[name=disc]:checked')?.value;
+    const sort = document.getElementById('sort-select').value;
+
+    const qp = new URLSearchParams({ page: pg, limit: 12 });
+    if (searchQ) qp.set('q', searchQ);
+    if (cats.length) qp.set('category', cats.join(','));
+    if (minP) qp.set('min_price', minP);
+    if (maxP) qp.set('max_price', maxP);
+    if (rating && rating !== '0') qp.set('min_rating', rating);
+    if (disc && disc !== '0') qp.set('min_discount', disc);
+    if (sort) qp.set('sort', sort);
+
+    try {
+      const data = await api('GET', `/products?${qp}`);
+      const grid = document.getElementById('products-grid');
+      grid.innerHTML = '';
+      (data.products || []).forEach(p => grid.insertAdjacentHTML('beforeend', productCard(p)));
+      document.getElementById('result-count').textContent = data.total || 0;
+      buildPagination(data.total, 12, pg);
+      if (!data.products?.length) grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>No products found</p><a href="products.html" class="btn btn-outline">Clear Filters</a></div>`;
+    } catch {
+      document.getElementById('products-grid').innerHTML = '<p class="text-muted p-4">Failed to load products.</p>';
+    }
+  }
+
+  function buildPagination(total, limit, current) {
+    const pages = Math.ceil(total / limit);
+    const el = document.getElementById('pagination');
+    if (pages <= 1) { el.innerHTML = ''; return; }
+    let html = '';
+    for (let i = 1; i <= Math.min(pages, 7); i++) {
+      html += `<button class="page-btn${i === current ? ' active' : ''}" onclick="applyFilters(${i})">${i}</button>`;
+    }
+    el.innerHTML = html;
+  }
+
+  function clearFilters() {
+    document.querySelectorAll('input[name=cat]').forEach(cb => cb.checked = false);
+    document.getElementById('min-price').value = '';
+    document.getElementById('max-price').value = '';
+    document.querySelector('input[name=rating][value="0"]').checked = true;
+    document.querySelector('input[name=disc][value="0"]').checked = true;
+    applyFilters();
+  }
+
+  function openFilter() {
+    document.getElementById('filter-sidebar').classList.add('show');
+    document.getElementById('filter-overlay').classList.add('show');
+  }
+  function closeFilter() {
+    document.getElementById('filter-sidebar').classList.remove('show');
+    document.getElementById('filter-overlay').classList.remove('show');
+  }
+
+  applyFilters();
+</script>
+</body>
+</html>
