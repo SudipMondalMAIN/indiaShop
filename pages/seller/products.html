@@ -1,1 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Products — indiaShop Seller</title>
+<link rel="stylesheet" href="../../static/css/style.css">
+<link rel="stylesheet" href="../../static/css/nav.css">
+<style>
+.seller-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.seller-nav a { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--surface); border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text2); box-shadow: var(--shadow-sm); transition: var(--transition); }
+.seller-nav a:hover, .seller-nav a.active { background: var(--primary); color: #fff; }
+.prod-table-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+.prod-table-row:hover { background: var(--bg); }
+.prod-img { width: 52px; height: 52px; object-fit: contain; background: var(--bg); border-radius: var(--radius); padding: 4px; flex-shrink: 0; }
+.prod-info { flex: 1; min-width: 0; }
+.prod-name-cell { font-size: 13px; font-weight: 500; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.prod-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.prod-price-cell { font-size: 14px; font-weight: 700; min-width: 80px; text-align: right; }
+.stock-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+.stock-badge.ok { background: #e8f5e9; color: var(--success); }
+.stock-badge.low { background: #fff8e1; color: var(--warning); }
+.stock-badge.out { background: #fce4e4; color: var(--danger); }
+</style>
+</head>
+<body>
+<nav class="navbar"><div class="container"></div></nav>
+<div class="page-content">
+<div class="container">
 
+  <div class="seller-nav">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="products.html" class="active">Products</a>
+    <a href="orders.html">Orders</a>
+    <a href="add-product.html">Add Product</a>
+  </div>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div class="fw-700 fs-18">My Products <span id="prod-count" class="text-muted fw-500 fs-14"></span></div>
+    <a href="add-product.html" class="btn btn-primary btn-sm">+ Add Product</a>
+  </div>
+
+  <div class="card" style="overflow:hidden">
+    <div style="padding:12px 16px;display:flex;gap:12px;border-bottom:1px solid var(--border);flex-wrap:wrap">
+      <input type="text" id="prod-search" placeholder="Search products..." style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;outline:none;min-width:160px">
+      <select id="prod-status-filter" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;outline:none" onchange="loadProducts()">
+        <option value="">All Products</option>
+        <option value="1">Active</option>
+        <option value="0">Inactive</option>
+      </select>
+    </div>
+
+    <div id="prod-list">
+      <div style="padding:40px;text-align:center"><div class="skeleton" style="height:60px;margin-bottom:10px"></div><div class="skeleton" style="height:60px"></div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+<nav class="bottom-nav"></nav>
+
+<script src="../../static/js/main.js"></script>
+<script>
+  if (!Auth.isLoggedIn()) window.location.href = '../login.html';
+  if (!Auth.isSeller() && !Auth.isAdmin()) window.location.href = '../account.html';
+  buildNavbar();
+
+  let allProducts = [];
+
+  async function loadProducts() {
+    try {
+      const data = await api('GET', '/seller/products');
+      allProducts = data.products || [];
+      document.getElementById('prod-count').textContent = `(${allProducts.length})`;
+      renderProducts();
+    } catch(e) { document.getElementById('prod-list').innerHTML = '<p class="text-muted p-4">Failed to load.</p>'; }
+  }
+
+  function renderProducts() {
+    const q = document.getElementById('prod-search').value.toLowerCase();
+    const status = document.getElementById('prod-status-filter').value;
+    let prods = allProducts.filter(p => {
+      if (q && !p.name.toLowerCase().includes(q)) return false;
+      if (status !== '' && String(p.is_active ? 1 : 0) !== status) return false;
+      return true;
+    });
+    const list = document.getElementById('prod-list');
+    if (!prods.length) { list.innerHTML = `<div class="empty-state"><p>No products found</p><a href="add-product.html" class="btn btn-primary">Add Your First Product</a></div>`; return; }
+    list.innerHTML = prods.map(p => {
+      const stockClass = p.stock === 0 ? 'out' : p.stock < 5 ? 'low' : 'ok';
+      const stockText = p.stock === 0 ? 'Out of Stock' : p.stock < 5 ? `Low (${p.stock})` : `In Stock (${p.stock})`;
+      return `
+        <div class="prod-table-row">
+          <img class="prod-img" src="${p.image || 'https://placehold.co/52x52?text=Img'}" alt="${p.name}">
+          <div class="prod-info">
+            <div class="prod-name-cell">${p.name}</div>
+            <div class="prod-meta">${p.category || ''}</div>
+          </div>
+          <div style="text-align:center;min-width:80px">
+            <span class="stock-badge ${stockClass}">${stockText}</span>
+          </div>
+          <div class="prod-price-cell">${formatPrice(p.price)}</div>
+          <div style="display:flex;gap:6px">
+            <a href="add-product.html?id=${p.id}" class="btn btn-outline btn-sm">Edit</a>
+            <button class="btn btn-ghost btn-sm" onclick="toggleProduct(${p.id}, ${p.is_active})" style="color:${p.is_active ? 'var(--warning)' : 'var(--success)'}">
+              ${p.is_active ? 'Deactivate' : 'Activate'}
+            </button>
+            <button class="btn btn-ghost btn-sm text-danger" onclick="deleteProduct(${p.id})">Delete</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function toggleProduct(id, isActive) {
+    try {
+      await api('PUT', `/seller/products/${id}`, { is_active: !isActive });
+      toast(isActive ? 'Product deactivated' : 'Product activated', 'success');
+      loadProducts();
+    } catch(e) { toast(e.message, 'error'); }
+  }
+
+  async function deleteProduct(id) {
+    if (!confirm('Delete this product? This cannot be undone.')) return;
+    try { await api('DELETE', `/seller/products/${id}`); toast('Product deleted'); loadProducts(); }
+    catch(e) { toast(e.message, 'error'); }
+  }
+
+  document.getElementById('prod-search').addEventListener('input', renderProducts);
+  loadProducts();
+</script>
+</body>
+</html>
