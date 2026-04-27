@@ -14,13 +14,14 @@
     signInWithPopup
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+  // ✅ FIX: Same real Firebase config as register.html
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyCdSG1DYsDLH72G4JWmtKz2hm1szAsmxD0",
+    authDomain: "indiashop-beb1c.firebaseapp.com",
+    projectId: "indiashop-beb1c",
+    storageBucket: "indiashop-beb1c.firebasestorage.app",
+    messagingSenderId: "897699694220",
+    appId: "1:897699694220:web:d0f646c415b832e7e61da9"
   };
 
   const app      = initializeApp(firebaseConfig);
@@ -34,11 +35,10 @@
       const result  = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       const data    = await api('POST', '/auth/google', { id_token: idToken });
-      // FIX Bug 4: use access_token not token
       Auth.set(data.access_token, data.user);
       toast('Welcome, ' + data.user.name + '!', 'success');
       setTimeout(() => {
-        const redirect = new URLSearchParams(window.location.search).get('next') || '../index.html';
+        const redirect = new URLSearchParams(window.location.search).get('next') || 'index.html';
         window.location.href = redirect;
       }, 800);
     } catch (e) {
@@ -211,9 +211,10 @@
 .pw-toggle:hover { color: #333; }
 </style>
 
-<script src="../static/js/main.js"></script>
+<!-- ✅ FIX: Correct path — same folder as register.html -->
+<script src="static/js/main.js"></script>
 <script>
-  if (Auth.isLoggedIn()) window.location.href = '../index.html';
+  if (Auth.isLoggedIn()) window.location.href = 'index.html';
 
   // ── Step helper ────────────────────────────────────────────────────────────
   const ALL_STEPS = ['email', 'otp', 'forgot-email', 'forgot-otp', 'new-password'];
@@ -237,8 +238,8 @@
     const btn = document.getElementById('send-otp-btn');
     btnLoading(btn, true);
     try {
-      // FIX Bug 2: send "purpose" instead of "type"
-      await api('POST', '/auth/send-otp', { email, purpose: 'verify_email' });
+      // ✅ purpose: 'login_otp' — backend এ আলাদা handle হবে
+      await api('POST', '/auth/send-otp', { email, purpose: 'login_otp' });
       document.getElementById('otp-sub').textContent = `Sent to ${email}`;
       showStep('otp');
       initOTPInputs();
@@ -259,17 +260,11 @@
     const btn = document.getElementById('verify-btn');
     btnLoading(btn, true);
     try {
-      const data = await api('POST', '/auth/verify-otp', {
-        email,
-        otp,
-        // FIX Bug 2: send "purpose" instead of "type"
-        purpose: 'verify_email',
-      });
-      // FIX Bug 4: backend returns access_token not token
+      const data = await api('POST', '/auth/login-otp', { email, otp });
       Auth.set(data.access_token, data.user);
       toast('Welcome back!', 'success');
       setTimeout(() => {
-        const redirect = new URLSearchParams(window.location.search).get('next') || '../index.html';
+        const redirect = new URLSearchParams(window.location.search).get('next') || 'index.html';
         window.location.href = redirect;
       }, 800);
     } catch (e) {
@@ -282,8 +277,7 @@
   async function resendOTP() {
     const email = document.getElementById('email').value.trim();
     try {
-      // FIX Bug 2: send "purpose" instead of "type"
-      await api('POST', '/auth/send-otp', { email, purpose: 'verify_email' });
+      await api('POST', '/auth/send-otp', { email, purpose: 'login_otp' });
       toast('OTP resent!', 'success');
       document.getElementById('otp-timer-wrap').innerHTML =
         `Resend in <span id="otp-timer">60s</span>`;
@@ -298,7 +292,6 @@
     const btn = document.getElementById('forgot-send-btn');
     btnLoading(btn, true);
     try {
-      // FIX Bug 2: send "purpose" instead of "type"
       await api('POST', '/auth/send-otp', { email, purpose: 'reset_password' });
       document.getElementById('forgot-otp-sub').textContent = `Sent to ${email}`;
       showStep('forgot-otp');
@@ -333,7 +326,6 @@
     const btn   = document.getElementById('forgot-verify-btn');
     btnLoading(btn, true);
     try {
-      // FIX Bug 2: send "purpose" instead of "type"
       await api('POST', '/auth/verify-otp', { email, otp, purpose: 'reset_password' });
       _resetOTP = otp;
       showStep('new-password');
@@ -348,7 +340,6 @@
   async function resendForgotOTP() {
     const email = document.getElementById('forgot-email').value.trim();
     try {
-      // FIX Bug 2: send "purpose" instead of "type"
       await api('POST', '/auth/send-otp', { email, purpose: 'reset_password' });
       toast('OTP resent!', 'success');
       document.getElementById('forgot-otp-timer-wrap').innerHTML =
@@ -367,7 +358,6 @@
     const btn   = document.getElementById('reset-btn');
     btnLoading(btn, true);
     try {
-      // FIX Bug 6: use "password" (matches backend's data.get("password"))
       await api('POST', '/auth/reset-password', {
         email,
         otp: _resetOTP,
