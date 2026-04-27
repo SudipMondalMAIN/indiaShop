@@ -135,7 +135,7 @@
           <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
           <div class="upload-zone-icon">📷</div>
           <p>Drag & drop photos here or <span>browse files</span></p>
-          <small>JPG, PNG, WEBP · Max 5MB each · You can upload multiple</small>
+          <small>JPG, PNG, WEBP · Max 5MB each · <strong>Up to 5 images</strong></small>
         </div>
         <div class="preview-grid" id="previewGrid"></div>
         <div class="tip-box" id="imgTip">
@@ -225,7 +225,7 @@ function updatePreview() {
   chk('chk-cat',   !!catId,              'Category selected');
   chk('chk-price', price > 0,            'Price entered');
   chk('chk-stock', stock > 0,            'Stock quantity');
-  chk('chk-img',   uploadedImages.length > 0, 'At least 1 photo');
+  chk('chk-img',   uploadedImages.length > 0, `At least 1 photo (${uploadedImages.length}/${MAX_IMAGES} uploaded)`);
 }
 
 function chk(id, ok, label) {
@@ -242,16 +242,29 @@ zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
 zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFiles([...e.dataTransfer.files]); });
 document.getElementById('fileInput').addEventListener('change', e => { handleFiles([...e.target.files]); e.target.value = ''; });
 
+const MAX_IMAGES = 5;
+
 async function handleFiles(files) {
   const imgs = files.filter(f => f.type.startsWith('image/'));
   if (!imgs.length) return toast('Please select image files only', 'error');
-  for (const f of imgs) {
+
+  const slots = MAX_IMAGES - uploadedImages.length;
+  if (slots <= 0) return toast(`Maximum ${MAX_IMAGES} images allowed`, 'error');
+
+  const toUpload = imgs.slice(0, slots);
+  if (imgs.length > slots) toast(`Only ${slots} more image${slots > 1 ? 's' : ''} can be added (max ${MAX_IMAGES})`, 'error');
+
+  for (const f of toUpload) {
     if (f.size > 5 * 1024 * 1024) { toast('"' + f.name + '" exceeds 5MB limit', 'error'); continue; }
     await uploadSingle(f);
   }
 }
 
 async function uploadSingle(file) {
+  if (uploadedImages.length >= MAX_IMAGES) {
+    return toast(`Maximum ${MAX_IMAGES} images allowed`, 'error');
+  }
+
   const tid  = 'up-' + Date.now() + '-' + Math.random().toString(36).slice(2);
   const grid = document.getElementById('previewGrid');
   const el   = document.createElement('div');
@@ -308,6 +321,23 @@ function renderPreviews() {
   });
 
   document.getElementById('imgTip').style.display = uploadedImages.length ? 'block' : 'none';
+
+  // Disable upload zone when limit reached
+  const zone = document.getElementById('uploadZone');
+  const fileInput = document.getElementById('fileInput');
+  if (uploadedImages.length >= MAX_IMAGES) {
+    zone.style.opacity = '0.5';
+    zone.style.pointerEvents = 'none';
+    fileInput.disabled = true;
+    document.querySelector('.upload-zone small').textContent = `✅ Maximum ${MAX_IMAGES} images uploaded`;
+  } else {
+    zone.style.opacity = '';
+    zone.style.pointerEvents = '';
+    fileInput.disabled = false;
+    document.querySelector('.upload-zone small').textContent =
+      `JPG, PNG, WEBP · Max 5MB each · ${MAX_IMAGES - uploadedImages.length} slot${MAX_IMAGES - uploadedImages.length !== 1 ? 's' : ''} remaining`;
+  }
+
   updatePreview();
 }
 
@@ -357,7 +387,7 @@ async function submitProduct() {
     };
     if (sku) payload.sku = sku;
 
-    await api('POST', '/api/admin/products', payload);
+    await api('POST', '/seller/products', payload);
     toast('Product added successfully! 🎉', 'success');
 
     // Reset
