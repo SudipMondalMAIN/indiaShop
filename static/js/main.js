@@ -196,15 +196,9 @@ function startOTPTimer(seconds) {
 
 // ═══════════════════════════════════════════════
 // NAVBAR BUILDER
+// সব file root এ — কোনো path detection দরকার নেই
 // ═══════════════════════════════════════════════
 function buildNavbar(active) {
-  // Detect depth
-  const depth = window.location.pathname.split('/').filter(Boolean).length;
-  const isSubfolder = depth >= 3; // pages/seller/ or pages/admin/
-  const isPages = depth >= 2;
-  const root = isSubfolder ? '../../' : isPages ? '../' : '';
-  const pagesRoot = isSubfolder ? '../' : '';
-
   const user = Auth.user();
   const cartCount = Cart.count();
 
@@ -212,7 +206,7 @@ function buildNavbar(active) {
   const navbar = document.querySelector('.navbar .container');
   if (navbar) {
     navbar.innerHTML = `
-      <a href="${root}index.html" class="nav-logo">india<span>Shop</span></a>
+      <a href="index.html" class="nav-logo">india<span>Shop</span></a>
       <div class="nav-search-wrap">
         <form class="nav-search" onsubmit="doSearch(event)">
           <input type="text" id="nav-search-input" placeholder="Search products, brands and more..." autocomplete="off">
@@ -222,11 +216,14 @@ function buildNavbar(active) {
         </form>
       </div>
       <div class="nav-actions">
-        ${user ? `<div class="nav-user-chip" onclick="window.location='${pagesRoot || root + 'pages/'}account.html'">
-          <div class="nav-avatar">${user.name?.charAt(0)?.toUpperCase() || 'U'}</div>
-          <span class="nav-username">${user.name?.split(' ')[0]}</span>
-        </div>` : `<a href="${pagesRoot || root + 'pages/'}login.html" class="btn btn-outline btn-sm">Login</a>`}
-        <a href="${pagesRoot || root + 'pages/'}cart.html" class="nav-cart-btn">
+        ${user
+          ? `<div class="nav-user-chip" onclick="window.location='account.html'">
+               <div class="nav-avatar">${user.name?.charAt(0)?.toUpperCase() || 'U'}</div>
+               <span class="nav-username">${user.name?.split(' ')[0]}</span>
+             </div>`
+          : `<a href="login.html" class="btn btn-outline btn-sm">Login</a>`
+        }
+        <a href="cart.html" class="nav-cart-btn">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
           <span class="cart-badge" style="display:${cartCount > 0 ? 'flex' : 'none'}">${cartCount}</span>
         </a>
@@ -237,10 +234,10 @@ function buildNavbar(active) {
   const bottom = document.querySelector('.bottom-nav');
   if (bottom) {
     const items = [
-      { id: 'home', label: 'Home', href: `${root}index.html`, icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` },
-      { id: 'products', label: 'Shop', href: `${pagesRoot || root + 'pages/'}products.html`, icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>` },
-      { id: 'cart', label: 'Cart', href: `${pagesRoot || root + 'pages/'}cart.html`, icon: `<span style="position:relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span class="cart-badge" style="display:${cartCount > 0 ? 'flex' : 'none'}">${cartCount}</span></span>` },
-      { id: 'account', label: 'Account', href: `${pagesRoot || root + 'pages/'}account.html`, icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>` },
+      { id: 'home',     label: 'Home',    href: 'index.html',    icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>` },
+      { id: 'products', label: 'Shop',    href: 'products.html', icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>` },
+      { id: 'cart',     label: 'Cart',    href: 'cart.html',     icon: `<span style="position:relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg><span class="cart-badge" style="display:${cartCount > 0 ? 'flex' : 'none'}">${cartCount}</span></span>` },
+      { id: 'account',  label: 'Account', href: 'account.html',  icon: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>` },
     ];
     bottom.innerHTML = items.map(item => `
       <a href="${item.href}" class="bottom-nav-item${active === item.id ? ' active' : ''}">
@@ -256,10 +253,7 @@ function doSearch(e) {
   e.preventDefault();
   const q = document.getElementById('nav-search-input')?.value?.trim();
   if (!q) return;
-  const isSubfolder = window.location.pathname.split('/').filter(Boolean).length >= 3;
-  const isPages = window.location.pathname.split('/').filter(Boolean).length >= 2;
-  const root = isSubfolder ? '../' : isPages ? '' : 'pages/';
-  window.location.href = `${root}products.html?q=${encodeURIComponent(q)}`;
+  window.location.href = `products.html?q=${encodeURIComponent(q)}`;
 }
 
 // ═══════════════════════════════════════════════
