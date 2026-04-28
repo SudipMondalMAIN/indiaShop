@@ -326,20 +326,56 @@ nav.navbar .container{min-height:60px}
 @media(max-width:840px){
   .trust{grid-template-columns:repeat(2,1fr)}
   .prod-grid{grid-template-columns:repeat(3,1fr)}
-  .hero h1{font-size:36px}
-  .hero{padding:36px 32px}
+  .hero h1{font-size:34px}
+  .hero{padding:32px 28px}
   .hero-right{display:none}
 }
 @media(max-width:600px){
-  .prod-grid{grid-template-columns:repeat(2,1fr)}
-  .promo-grid{grid-template-columns:1fr}
-  .hero h1{font-size:28px}
-  .hero{padding:28px 24px;min-height:200px}
-  .hero p{display:none}
+  .container{padding:0 14px}
+  .page-content{padding:12px 0 90px}
+  .hero{
+    padding:24px 20px 28px;
+    min-height:unset;
+    border-radius:18px;
+    grid-template-columns:1fr;
+    margin-bottom:14px;
+  }
+  .hero h1{font-size:26px;letter-spacing:-.5px}
+  .hero p{font-size:13px;display:block;margin-bottom:20px}
+  .hero-right{display:none}
+  .hero-pill{font-size:10px;padding:4px 10px;margin-bottom:12px}
+  .btn-cta,.btn-ghost{padding:11px 20px;font-size:13px}
+  .ticker-wrap{padding:9px 14px;border-radius:10px;margin-bottom:16px}
+  .ticker-badge{font-size:10px;padding:3px 9px}
+  .ticker-item{font-size:12px}
+  .trust{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+  .trust-item{padding:13px 12px;border-radius:12px;gap:8px}
+  .trust-icon-wrap{width:36px;height:36px;border-radius:10px;font-size:16px}
+  .trust-text strong{font-size:12px}
+  .trust-text span{font-size:10px}
+  .sec-gap{margin-bottom:24px}
+  .sec-title{font-size:17px}
+  .cat-chip{padding:12px 10px;min-width:68px;border-radius:12px}
+  .cat-icon{width:42px;height:42px;border-radius:12px;font-size:18px}
+  .cat-chip-label{font-size:10px}
+  .promo-grid{grid-template-columns:1fr;gap:10px;margin-bottom:20px}
+  .promo-card{height:140px;padding:18px;border-radius:16px}
+  .promo-content h3{font-size:17px}
+  .promo-emoji{font-size:72px}
+  .prod-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .prod-img-wrap{height:145px}
+  .prod-body{padding:10px 11px 12px}
+  .prod-name{font-size:12px}
+  .prod-price{font-size:14px}
+  .prod-badge{font-size:9px;padding:2px 7px}
+  .prod-wishlist{opacity:1;width:26px;height:26px;font-size:12px}
+  .sec-link{font-size:11px;padding:6px 12px}
 }
-@media(max-width:480px){
-  .trust{grid-template-columns:1fr 1fr}
-  .trust-text span{display:none}
+@media(max-width:360px){
+  .hero h1{font-size:22px}
+  .hero-actions{flex-direction:column}
+  .btn-cta,.btn-ghost{width:100%;justify-content:center}
+  .prod-grid{gap:8px}
 }
 </style>
 </head>
