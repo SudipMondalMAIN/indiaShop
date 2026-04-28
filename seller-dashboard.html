@@ -90,10 +90,10 @@
 </div>
 <nav class="bottom-nav"></nav>
 
-<script src="../../static/js/main.js"></script>
+<script src="static/js/main.js"></script>
 <script>
-  if (!Auth.isLoggedIn()) window.location.href = '../login.html';
-  if (!Auth.isSeller() && !Auth.isAdmin()) window.location.href = '../account.html';
+  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+  if (!Auth.isSeller() && !Auth.isAdmin()) window.location.href = 'account.html';
   buildNavbar();
 
   const user = Auth.user();
