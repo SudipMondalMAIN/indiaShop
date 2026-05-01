@@ -15,7 +15,6 @@ a{text-decoration:none;color:inherit}
 button{font-family:'Mukta',sans-serif;cursor:pointer;border:none;outline:none;background:none}
 img{display:block;max-width:100%;object-fit:cover}
 .page{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;position:relative}
-/* HEADER */
 .header{position:sticky;top:0;z-index:100;background:var(--header);box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .header-top{display:flex;align-items:center;gap:10px;padding:10px 14px 8px}
 .logo{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;flex-shrink:0}
@@ -32,14 +31,12 @@ img{display:block;max-width:100%;object-fit:cover}
 .loc-bar{background:var(--green-d);padding:6px 14px;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,.15)}
 .loc-bar .loc-text{font-size:12px;font-weight:600;color:#fff;flex:1}
 .loc-change{font-size:11px;font-weight:700;color:#ffeb3b;flex-shrink:0;cursor:pointer}
-/* DELIVERY STRIP */
 .del-strip{background:#fff;padding:9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border2)}
 .del-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 1.8s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(27,163,69,.5)}50%{box-shadow:0 0 0 5px rgba(27,163,69,0)}}
 .del-text{font-size:12.5px;font-weight:600;color:var(--t1);flex:1}
 .del-text span{color:var(--green)}
 .del-tag{background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:var(--r4)}
-/* TICKER */
 .ticker{overflow:hidden;background:var(--orange-l);border-bottom:1px solid #ffe0c2}
 .ticker-inner{display:flex;align-items:center;padding:7px 0}
 .ticker-label{flex-shrink:0;padding:0 10px;font-size:10px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.7px;border-right:1px solid #f5caa0}
@@ -49,9 +46,7 @@ img{display:block;max-width:100%;object-fit:cover}
 .t-item{font-size:11.5px;font-weight:500;color:var(--t2);white-space:nowrap;padding:0 16px;display:flex;align-items:center;gap:4px}
 .t-item b{color:var(--orange);font-weight:700}
 .t-sep{color:var(--t4);font-size:8px}
-/* BODY */
 .scroll-body{overflow-y:auto;padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
-/* CATEGORIES */
 .cats-wrap{background:#fff;padding:12px 14px;border-bottom:1px solid var(--border2)}
 .cats-title{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px}
 .cats-row{display:flex;gap:14px;overflow-x:auto;padding-bottom:4px}
@@ -61,7 +56,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .cat-chip.active .cat-img-wrap{border-color:var(--green);box-shadow:0 0 0 2px var(--green-l)}
 .cat-lbl{font-size:11px;font-weight:600;color:var(--t2);text-align:center;white-space:nowrap}
 .cat-chip.active .cat-lbl{color:var(--green)}
-/* HERO */
 .hero{margin:10px;border-radius:var(--r8);overflow:hidden;box-shadow:var(--shadow)}
 .hero-bg{background:linear-gradient(120deg,#064e1f 0%,#1ba345 60%,#34d058 100%);padding:20px 18px;min-height:145px;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
 .hero-circle1{position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
@@ -72,7 +66,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .hero-h span{color:#ffeb3b}
 .hero-p{font-size:12px;color:rgba(255,255,255,.75);margin-bottom:14px;line-height:1.4;max-width:58%}
 .hero-btn{display:inline-flex;align-items:center;gap:5px;background:#fff;color:var(--green-d);font-size:13px;font-weight:700;padding:8px 18px;border-radius:var(--r4);width:fit-content;box-shadow:0 2px 8px rgba(0,0,0,.2);cursor:pointer}
-/* MINI GRID */
 .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 10px 10px}
 .mini-card{border-radius:var(--r8);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);position:relative;height:110px}
 .mini-card img{width:100%;height:100%;object-fit:cover;transition:.2s}
@@ -81,7 +74,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .mini-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:2px 7px;border-radius:99px;margin-bottom:4px;display:inline-block;background:rgba(255,255,255,.2);color:#fff;width:fit-content}
 .mini-h{font-size:14px;font-weight:700;color:#fff}
 .mini-p{font-size:11px;color:rgba(255,255,255,.8)}
-/* PROMO */
 .promo{margin:0 10px 10px;background:#fff;border-radius:var(--r8);border:1.5px dashed var(--green);padding:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
 .promo-left .p-eyebrow{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
 .promo-left .p-h{font-size:20px;font-weight:800;color:var(--t1);margin-bottom:2px}
@@ -89,14 +81,12 @@ img{display:block;max-width:100%;object-fit:cover}
 .promo-right{text-align:center}
 .promo-right .p-ico{font-size:38px;margin-bottom:4px}
 .promo-code{background:var(--green-l);border:1.5px dashed var(--green);border-radius:var(--r4);padding:4px 10px;font-size:13px;font-weight:800;color:var(--green-d);letter-spacing:2px;cursor:pointer}
-/* TRUST ROW */
 .trust-row{display:flex;background:#fff;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin-bottom:8px}
 .trust-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 8px;border-right:1px solid var(--border2)}
 .trust-item:last-child{border-right:none}
 .trust-ico{font-size:22px}
 .trust-t{font-size:11px;font-weight:700;color:var(--t1);text-align:center}
 .trust-s{font-size:10px;color:var(--t3);text-align:center}
-/* PRODUCT SECTION */
 .sec{background:#fff;margin:0 0 8px;padding:14px}
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .sec-title{font-size:16px;font-weight:700;color:var(--t1)}
@@ -126,7 +116,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .qty-ctrl{display:flex;align-items:center;background:#fff;border:1.5px solid var(--green);border-radius:var(--r4);overflow:hidden;width:100%}
 .qty-btn{width:34px;height:34px;font-size:20px;font-weight:700;color:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer}
 .qty-val{flex:1;text-align:center;font-size:14px;font-weight:700;color:var(--t1)}
-/* SKELETON */
 .skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skel-card{border:0.5px solid var(--border2);background:#fff}
@@ -134,17 +123,14 @@ img{display:block;max-width:100%;object-fit:cover}
 .skel-img{width:100%;aspect-ratio:1}
 .skel-body{padding:10px}
 .skel-line{border-radius:4px;margin-bottom:8px;height:12px}
-/* EMPTY */
 .empty-state{grid-column:1/-1;padding:40px 20px;text-align:center;color:var(--t3)}
 .empty-state .e-ico{font-size:48px;margin-bottom:12px}
 .empty-state .e-t{font-size:15px;font-weight:700;color:var(--t2);margin-bottom:4px}
 .empty-state .e-s{font-size:12px}
-/* SELLER BANNER */
 .seller-banner{margin:0 10px 10px;border-radius:var(--r8);overflow:hidden;background:linear-gradient(135deg,#1565c0,#0d47a1);padding:16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
 .sb-left .sb-t{font-family:'Baloo 2',cursive;font-size:17px;font-weight:800;color:#fff;margin-bottom:2px}
 .sb-left .sb-s{font-size:12px;color:rgba(255,255,255,.8)}
 .sb-btn{background:#fff;color:#0d47a1;font-size:12px;font-weight:700;padding:8px 14px;border-radius:var(--r4);flex-shrink:0;cursor:pointer;text-decoration:none;display:block}
-/* SEARCH DROPDOWN */
 .search-results{background:#fff;position:absolute;top:100%;left:0;right:0;z-index:200;border-top:1px solid var(--border2);max-height:300px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12);border-radius:0 0 var(--r8) var(--r8)}
 .sr-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border2)}
 .sr-item:hover{background:var(--bg)}
@@ -152,7 +138,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .sr-name{font-size:13px;font-weight:600;color:var(--t1)}
 .sr-cat{font-size:11px;color:var(--t3)}
 .sr-price{font-size:13px;font-weight:700;color:var(--green);margin-left:auto;flex-shrink:0}
-/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;justify-content:center}
 .bottom-nav-inner{width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 8px rgba(0,0,0,.08)}
 .bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 4px;cursor:pointer;text-decoration:none;color:var(--t3);font-size:10px;font-weight:600;border:none;background:none;font-family:'Mukta',sans-serif}
@@ -160,13 +145,11 @@ img{display:block;max-width:100%;object-fit:cover}
 .bn svg{width:23px;height:23px;margin-bottom:1px}
 .bn-indicator{width:4px;height:4px;border-radius:50%;background:var(--green);margin-top:2px;opacity:0}
 .bn.active .bn-indicator{opacity:1}
-/* CART FAB */
 .cart-fab{position:fixed;bottom:calc(78px + env(safe-area-inset-bottom,0px));right:14px;z-index:200;background:var(--green);border-radius:24px;align-items:center;gap:8px;padding:10px 16px;box-shadow:0 4px 20px rgba(27,163,69,.45);cursor:pointer;display:none}
 .cart-fab-text{font-size:13px;font-weight:700;color:#fff}
 .cart-fab-badge{background:#ff3d00;color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:1.5px solid var(--green)}
-/* TOAST */
-.toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--t1);color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap;z-index:300}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-wrap{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(min-width:481px){.page{box-shadow:0 0 40px rgba(0,0,0,.15);border-left:1px solid var(--border);border-right:1px solid var(--border)}}
 </style>
 </head>
@@ -234,16 +217,11 @@ img{display:block;max-width:100%;object-fit:cover}
 </div>
 
 <div class="scroll-body">
-
-  <!-- CATEGORIES -->
   <div class="cats-wrap">
     <div class="cats-title">Shop by Category</div>
-    <div class="cats-row" id="cats-row">
-      <!-- injected by JS from API -->
-    </div>
+    <div class="cats-row" id="cats-row"></div>
   </div>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-bg">
       <div class="hero-circle1"></div><div class="hero-circle2"></div>
@@ -255,7 +233,6 @@ img{display:block;max-width:100%;object-fit:cover}
     </div>
   </div>
 
-  <!-- QUICK CATEGORY CARDS -->
   <div class="mini-grid">
     <div class="mini-card" onclick="filterCat(null,'electronics')">
       <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop" alt="Electronics">
@@ -275,7 +252,6 @@ img{display:block;max-width:100%;object-fit:cover}
     </div>
   </div>
 
-  <!-- PROMO -->
   <div class="promo">
     <div class="promo-left">
       <div class="p-eyebrow">🎉 First Order</div>
@@ -288,7 +264,6 @@ img{display:block;max-width:100%;object-fit:cover}
     </div>
   </div>
 
-  <!-- TRUST -->
   <div class="trust-row">
     <div class="trust-item"><div class="trust-ico">⚡</div><div class="trust-t">Fast</div><div class="trust-s">Delivery</div></div>
     <div class="trust-item"><div class="trust-ico">✅</div><div class="trust-t">Verified</div><div class="trust-s">Sellers</div></div>
@@ -296,7 +271,6 @@ img{display:block;max-width:100%;object-fit:cover}
     <div class="trust-item"><div class="trust-ico">🔒</div><div class="trust-t">Safe Pay</div><div class="trust-s">UPI · COD</div></div>
   </div>
 
-  <!-- PRODUCTS -->
   <div class="sec">
     <div class="sec-head">
       <div class="sec-title" id="sec-title">🛍️ <span>All</span> Products</div>
@@ -305,7 +279,6 @@ img{display:block;max-width:100%;object-fit:cover}
     <div class="prod-grid" id="prod-grid"></div>
   </div>
 
-  <!-- SELLER BANNER -->
   <div class="seller-banner">
     <div class="sb-left">
       <div class="sb-t">🏪 Sell on indiaShop</div>
@@ -313,8 +286,7 @@ img{display:block;max-width:100%;object-fit:cover}
     </div>
     <a class="sb-btn" href="seller-register.html">Become a Seller →</a>
   </div>
-
-</div><!-- /scroll-body -->
+</div>
 
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
@@ -346,291 +318,248 @@ img{display:block;max-width:100%;object-fit:cover}
   <span class="cart-fab-text" id="cart-total">₹0</span>
   <span class="cart-fab-badge" id="cart-count">0</span>
 </div>
-<div class="toast" id="toast"></div>
-</div>
 
+<!-- main.js must be loaded before page script -->
+<script src="static/js/main.js"></script>
 <script>
-// ══════════════════════════════════════════════════════════════════════════════
-// ⚠️  আপনার Render backend URL এখানে দিন — trailing slash ছাড়া
-// ══════════════════════════════════════════════════════════════════════════════
-const BASE_URL = 'https://your-backend.onrender.com';
-
 // ─── DELIVERY TIMER ───────────────────────────────────────────────────────────
-let ts = 598;
-const tel = document.getElementById('dtimer');
-function tick() {
-  tel.textContent = String(Math.floor(ts/60)).padStart(2,'0') + ':' + String(ts%60).padStart(2,'0');
-  ts = ts > 0 ? ts - 1 : 598;
-}
-tick(); setInterval(tick, 1000);
+let _ts = 598;
+const _tel = document.getElementById('dtimer');
+(function _tick() {
+  if (_tel) _tel.textContent = String(Math.floor(_ts/60)).padStart(2,'0') + ':' + String(_ts%60).padStart(2,'0');
+  _ts = _ts > 0 ? _ts - 1 : 598;
+  setTimeout(_tick, 1000);
+})();
 
-// ─── CART (localStorage) ──────────────────────────────────────────────────────
-function getCart()    { try { return JSON.parse(localStorage.getItem('is_cart') || '{}') } catch { return {} } }
-function saveCart(c)  { localStorage.setItem('is_cart', JSON.stringify(c)) }
-let cart = getCart();
+// ─── LOCAL CART (object keyed by product id) ──────────────────────────────────
+function _getCart()   { try { return JSON.parse(localStorage.getItem('is_cart') || '{}'); } catch { return {}; } }
+function _saveCart(c) { localStorage.setItem('is_cart', JSON.stringify(c)); }
+let _cart = _getCart();
 
 function updateCartFab() {
-  const items = Object.values(cart).reduce((a, b) => a + b.qty, 0);
-  const val   = Object.values(cart).reduce((a, b) => a + b.price * b.qty, 0);
-  document.getElementById('cart-count').textContent = items;
-  document.getElementById('cart-total').textContent  = '₹' + val.toLocaleString('en-IN');
-  document.getElementById('cart-fab').style.display  = items > 0 ? 'flex' : 'none';
-  const hb = document.getElementById('cart-hbadge');
-  hb.textContent = items; hb.style.display = items > 0 ? 'flex' : 'none';
+  const items = Object.values(_cart).reduce((a,b) => a + b.qty, 0);
+  const val   = Object.values(_cart).reduce((a,b) => a + b.price * b.qty, 0);
+  const fab   = document.getElementById('cart-fab');
+  const cnt   = document.getElementById('cart-count');
+  const tot   = document.getElementById('cart-total');
+  const hb    = document.getElementById('cart-hbadge');
+  if (cnt) cnt.textContent = items;
+  if (tot) tot.textContent = '₹' + val.toLocaleString('en-IN');
+  if (fab) fab.style.display = items > 0 ? 'flex' : 'none';
+  if (hb)  { hb.textContent = items; hb.style.display = items > 0 ? 'flex' : 'none'; }
 }
 
-// ─── USER ─────────────────────────────────────────────────────────────────────
-function checkUser() {
-  try {
-    const d = JSON.parse(localStorage.getItem('is_user') || 'null');
-    if (d) {
-      document.getElementById('user-label').textContent = d.name ? d.name.split(' ')[0] : 'Account';
-      document.getElementById('user-btn').href = 'account.html';
-    }
-  } catch {}
+// ─── USER HEADER ──────────────────────────────────────────────────────────────
+function _checkUser() {
+  const user = Auth.user();
+  if (user) {
+    const lbl = document.getElementById('user-label');
+    const btn = document.getElementById('user-btn');
+    if (lbl) lbl.textContent = (user.name || 'Account').split(' ')[0];
+    if (btn) btn.href = 'account.html';
+  }
 }
 
-// ─── CATEGORIES (from API) ────────────────────────────────────────────────────
-let allCategories = [];
+// ─── CATEGORIES ───────────────────────────────────────────────────────────────
+let _allCats = [];
 
 async function loadCategories() {
   try {
-    const res  = await fetch(`${BASE_URL}/categories`);
-    const data = await res.json();
-    allCategories = data.data || [];
-  } catch { allCategories = []; }
-  renderCategoryChips();
+    const data = await api('GET', '/categories');   // BASE_URL already has /api
+    _allCats = data?.data || [];
+  } catch { _allCats = []; }
+  _renderChips();
 }
 
-function renderCategoryChips() {
+function _renderChips() {
   const row = document.getElementById('cats-row');
+  if (!row) return;
   const allChip = `
     <div class="cat-chip active" id="chip-all" onclick="filterCat(this,'all')">
       <div class="cat-img-wrap">🛒</div>
       <div class="cat-lbl">All</div>
     </div>`;
-
-  const chips = allCategories.map(c => `
+  const chips = _allCats.map(c => `
     <div class="cat-chip" id="chip-${c.slug}" onclick="filterCat(this,'${c.slug}')">
       <div class="cat-img-wrap">
         ${c.image_url
-          ? `<img src="${c.image_url}" alt="${esc(c.name)}"
-                  onerror="this.textContent='${c.emoji || '📦'}';">`
+          ? `<img src="${c.image_url}" alt="${escapeHtml(c.name)}" onerror="this.parentNode.textContent='${c.emoji||'📦'}';">`
           : (c.emoji || '📦')}
       </div>
-      <div class="cat-lbl">${c.name}</div>
+      <div class="cat-lbl">${escapeHtml(c.name)}</div>
     </div>`).join('');
-
   row.innerHTML = allChip + chips;
 }
 
-// ─── PRODUCTS (from API) ──────────────────────────────────────────────────────
-let currentCat = 'all';
-
-async function loadProducts(slug = '', search = '') {
-  showSkeleton();
+// ─── PRODUCTS ─────────────────────────────────────────────────────────────────
+async function loadProducts(slug, search) {
+  _showSkeleton();
   try {
-    let url = `${BASE_URL}/api/products?limit=40`;
-    if (slug && slug !== 'all') url += `&category=${encodeURIComponent(slug)}`;
-    if (search)                  url += `&search=${encodeURIComponent(search)}`;
-
-    const res  = await fetch(url);
-    const data = await res.json();
-    renderProducts(data.data?.products || []);
+    let path = '/products?limit=40';
+    if (slug && slug !== 'all') path += `&category=${encodeURIComponent(slug)}`;
+    if (search)                  path += `&search=${encodeURIComponent(search)}`;
+    const data = await api('GET', path);
+    _renderProducts(data?.data?.products || []);
   } catch {
-    document.getElementById('prod-grid').innerHTML = `
-      <div class="empty-state">
-        <div class="e-ico">⚠️</div>
-        <div class="e-t">Could not load products</div>
-        <div class="e-s">Check your connection and try again</div>
-      </div>`;
+    const g = document.getElementById('prod-grid');
+    if (g) g.innerHTML = `<div class="empty-state"><div class="e-ico">⚠️</div><div class="e-t">Could not load products</div><div class="e-s">Check connection and try again</div></div>`;
   }
 }
 
-function showSkeleton() {
-  document.getElementById('prod-grid').innerHTML = [1,2,3,4].map(() => `
+function _showSkeleton() {
+  const g = document.getElementById('prod-grid');
+  if (!g) return;
+  g.innerHTML = [1,2,3,4].map(() => `
     <div class="skel-card">
       <div class="skel-img skeleton"></div>
       <div class="skel-body">
         <div class="skel-line skeleton" style="width:80%"></div>
-        <div class="skel-line skeleton" style="width:50%"></div>
-        <div class="skel-line skeleton" style="width:100%;height:32px"></div>
+        <div class="skel-line skeleton" style="width:55%"></div>
+        <div class="skel-line skeleton" style="width:100%;height:32px;margin-top:6px"></div>
       </div>
     </div>`).join('');
 }
 
-// Filter by category chip
 async function filterCat(el, slug) {
-  currentCat = slug;
-
-  // Highlight active chip
   document.querySelectorAll('.cat-chip').forEach(x => x.classList.remove('active'));
-  if (el) {
-    el.classList.add('active');
-  } else {
-    const chip = document.getElementById('chip-' + slug) || document.getElementById('chip-all');
-    if (chip) chip.classList.add('active');
-  }
+  const chip = el || document.getElementById('chip-'+slug) || document.getElementById('chip-all');
+  if (chip) chip.classList.add('active');
 
-  // Update section title
-  const cat     = allCategories.find(c => c.slug === slug);
-  const catName = slug === 'all' ? 'All'       : (cat ? cat.name        : slug);
-  const emoji   = slug === 'all' ? '🛍️'        : (cat ? (cat.emoji||'📦') : '📦');
-  document.getElementById('sec-title').innerHTML = `${emoji} <span>${catName}</span> Products`;
+  const cat   = _allCats.find(c => c.slug === slug);
+  const name  = slug === 'all' ? 'All' : (cat?.name || slug);
+  const emoji = slug === 'all' ? '🛍️' : (cat?.emoji || '📦');
+  const ttl   = document.getElementById('sec-title');
+  if (ttl) ttl.innerHTML = `${emoji} <span>${escapeHtml(name)}</span> Products`;
 
   await loadProducts(slug);
-  setTimeout(() => document.getElementById('prod-grid').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  document.getElementById('prod-grid')?.scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
-// ─── RENDER CARDS ─────────────────────────────────────────────────────────────
-function renderProducts(list) {
-  const wl   = JSON.parse(localStorage.getItem('is_wishlist') || '[]');
-  const grid = document.getElementById('prod-grid');
-  if (!list || !list.length) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="e-ico">🔍</div>
-        <div class="e-t">No products found</div>
-        <div class="e-s">Try another category or check back later</div>
-      </div>`;
+// ─── RENDER PRODUCT CARDS ─────────────────────────────────────────────────────
+function _renderProducts(list) {
+  const g = document.getElementById('prod-grid');
+  if (!g) return;
+  if (!list?.length) {
+    g.innerHTML = `<div class="empty-state"><div class="e-ico">🔍</div><div class="e-t">No products found</div><div class="e-s">Try another category</div></div>`;
     return;
   }
-  grid.innerHTML = list.map(p => makeCard(p, wl)).join('');
+  const wl = JSON.parse(localStorage.getItem('is_wishlist') || '[]');
+  g.innerHTML = list.map(p => _makeCard(p, wl)).join('');
 }
 
-function makeCard(p, wl) {
+function _makeCard(p, wl) {
   const wished  = wl.includes(p.id);
   const price   = p.discounted_price ?? p.price;
   const hasDisc = (p.discount_pct || 0) >= 5;
   const img     = p.primary_image || 'https://placehold.co/300x300/f9f9f9/878787?text=?';
-  const q       = cart[p.id]?.qty || 0;
+  const q       = _cart[p.id]?.qty || 0;
+  const sid     = String(p.id);
+  const sname   = String(p.name||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+  const simg    = String(img).replace(/'/g,"&#39;");
 
   const addHTML = q > 0
     ? `<div class="qty-ctrl">
-         <button class="qty-btn" onclick="changeQty(event,'${p.id}',-1,${price},'${esc(p.name)}','${img}')">−</button>
+         <button class="qty-btn" onclick="event.stopPropagation();_chgQty('${sid}',-1,${price},'${sname}','${simg}')">−</button>
          <span class="qty-val">${q}</span>
-         <button class="qty-btn" onclick="changeQty(event,'${p.id}',1,${price},'${esc(p.name)}','${img}')">+</button>
+         <button class="qty-btn" onclick="event.stopPropagation();_chgQty('${sid}',1,${price},'${sname}','${simg}')">+</button>
        </div>`
-    : `<button class="pc-add" onclick="addToCart(event,'${p.id}',${price},'${esc(p.name)}','${img}')">+ Add</button>`;
+    : `<button class="pc-add" onclick="event.stopPropagation();_addCart('${sid}',${price},'${sname}','${simg}')">+ Add</button>`;
 
-  return `<div class="pc" onclick="goProduct('${p.slug}')">
+  return `<div class="pc" onclick="location='product-detail.html?slug=${p.slug}'">
     <div class="pc-img-wrap">
-      <img src="${img}" alt="${esc(p.name)}" loading="lazy"
+      <img src="${escapeHtml(img)}" alt="${escapeHtml(p.name||'')}" loading="lazy"
            onerror="this.src='https://placehold.co/300x300/f9f9f9/878787?text=?'">
       ${hasDisc ? `<span class="pc-badge sale">${p.discount_pct}% OFF</span>` : ''}
       ${p.is_featured ? `<span class="pc-badge hot" style="left:auto;right:36px">⭐ Top</span>` : ''}
-      <button class="pc-wish" onclick="wishToggle(event,this,'${p.id}')">${wished?'❤️':'🤍'}</button>
+      <button class="pc-wish" onclick="event.stopPropagation();_wishToggle(this,'${sid}')">${wished?'❤️':'🤍'}</button>
     </div>
     <div class="pc-body">
-      <div class="pc-name">${p.name}</div>
-      ${p.brand ? `<div class="pc-brand">${p.brand}</div>` : ''}
-      ${p.avg_rating > 0 ? `
-        <div class="pc-rating">
-          <div class="pc-stars-box"><span>★</span><span>${p.avg_rating}</span></div>
-          <span class="pc-rcount">(${p.review_count})</span>
-        </div>` : ''}
+      <div class="pc-name">${escapeHtml(p.name||'')}</div>
+      ${p.brand ? `<div class="pc-brand">${escapeHtml(p.brand)}</div>` : ''}
+      ${p.avg_rating > 0 ? `<div class="pc-rating"><div class="pc-stars-box"><span>★</span><span>${p.avg_rating}</span></div><span class="pc-rcount">(${p.review_count})</span></div>` : ''}
       <div class="pc-price-row">
-        <span class="pc-price">₹${price.toLocaleString('en-IN')}</span>
-        ${hasDisc ? `<span class="pc-mrp">₹${p.price.toLocaleString('en-IN')}</span>` : ''}
-        ${hasDisc ? `<span class="pc-off">${p.discount_pct}% off</span>` : ''}
+        <span class="pc-price">₹${Number(price).toLocaleString('en-IN')}</span>
+        ${hasDisc ? `<span class="pc-mrp">₹${Number(p.price).toLocaleString('en-IN')}</span><span class="pc-off">${p.discount_pct}% off</span>` : ''}
       </div>
-      <div id="add-row-${p.id}">${addHTML}</div>
+      <div id="ar-${sid}">${addHTML}</div>
     </div>
   </div>`;
 }
 
-function esc(s) { return String(s||'').replace(/'/g,"&#39;").replace(/"/g,'&quot;'); }
-function goProduct(slug) { window.location = 'product-detail.html?slug=' + slug; }
-
-// ─── CART ACTIONS ─────────────────────────────────────────────────────────────
-function addToCart(e, id, price, name, img) {
-  e.stopPropagation();
-  cart[id] = { price, qty: 1, name, img };
-  saveCart(cart); updateAddRow(id, price, name, img); updateCartFab();
-  showToast('✅ ' + name + ' added!');
+function _addCart(id, price, name, img) {
+  _cart[id] = { price, qty:1, name, img };
+  _saveCart(_cart); _refreshRow(id, price, name, img); updateCartFab();
+  toast('✅ Added to cart!', 'success');
 }
 
-function changeQty(e, id, d, price, name, img) {
-  e.stopPropagation();
-  if (!cart[id]) cart[id] = { price, qty: 0, name, img };
-  cart[id].qty = Math.max(0, cart[id].qty + d);
-  if (cart[id].qty === 0) delete cart[id];
-  saveCart(cart); updateAddRow(id, price, name, img); updateCartFab();
+function _chgQty(id, d, price, name, img) {
+  if (!_cart[id]) _cart[id] = { price, qty:0, name, img };
+  _cart[id].qty = Math.max(0, _cart[id].qty + d);
+  if (_cart[id].qty === 0) delete _cart[id];
+  _saveCart(_cart); _refreshRow(id, price, name, img); updateCartFab();
 }
 
-function updateAddRow(id, price, name, img) {
-  const row = document.getElementById('add-row-' + id);
+function _refreshRow(id, price, name, img) {
+  const row = document.getElementById('ar-'+id);
   if (!row) return;
-  const q = cart[id]?.qty || 0;
+  const q     = _cart[id]?.qty || 0;
+  const sname = String(name).replace(/'/g,"&#39;");
+  const simg  = String(img).replace(/'/g,"&#39;");
   row.innerHTML = q > 0
     ? `<div class="qty-ctrl">
-         <button class="qty-btn" onclick="changeQty(event,'${id}',-1,${price},'${esc(name)}','${img}')">−</button>
+         <button class="qty-btn" onclick="event.stopPropagation();_chgQty('${id}',-1,${price},'${sname}','${simg}')">−</button>
          <span class="qty-val">${q}</span>
-         <button class="qty-btn" onclick="changeQty(event,'${id}',1,${price},'${esc(name)}','${img}')">+</button>
+         <button class="qty-btn" onclick="event.stopPropagation();_chgQty('${id}',1,${price},'${sname}','${simg}')">+</button>
        </div>`
-    : `<button class="pc-add" onclick="addToCart(event,'${id}',${price},'${esc(name)}','${img}')">+ Add</button>`;
+    : `<button class="pc-add" onclick="event.stopPropagation();_addCart('${id}',${price},'${sname}','${simg}')">+ Add</button>`;
 }
 
-// ─── WISHLIST ─────────────────────────────────────────────────────────────────
-function wishToggle(e, btn, id) {
-  e.stopPropagation();
+function _wishToggle(btn, id) {
   const wl     = JSON.parse(localStorage.getItem('is_wishlist') || '[]');
-  const wished = btn.textContent === '❤️';
+  const wished = btn.textContent.trim() === '❤️';
   btn.textContent = wished ? '🤍' : '❤️';
-  if (!wished) { if (!wl.includes(id)) wl.push(id); showToast('❤️ Saved to wishlist'); }
-  else         { const i = wl.indexOf(id); if (i > -1) wl.splice(i, 1); showToast('Removed from wishlist'); }
+  if (!wished) { if (!wl.includes(id)) wl.push(id); toast('❤️ Saved to wishlist', 'success'); }
+  else { const i = wl.indexOf(id); if (i>-1) wl.splice(i,1); toast('Removed from wishlist'); }
   localStorage.setItem('is_wishlist', JSON.stringify(wl));
 }
 
 // ─── SEARCH ───────────────────────────────────────────────────────────────────
-let _searchTimer = null;
-
+let _stimer;
 async function handleSearch(val) {
-  const q   = val.trim();
-  const res = document.getElementById('search-results');
-  if (!q) { res.style.display = 'none'; return; }
-  clearTimeout(_searchTimer);
-  _searchTimer = setTimeout(async () => {
+  const q = val.trim();
+  const r = document.getElementById('search-results');
+  if (!q) { if(r) r.style.display='none'; return; }
+  clearTimeout(_stimer);
+  _stimer = setTimeout(async () => {
     try {
-      const r    = await fetch(`${BASE_URL}/api/products?search=${encodeURIComponent(q)}&limit=6`);
-      const data = await r.json();
-      const hits = data.data?.products || [];
-      if (!hits.length) { res.style.display = 'none'; return; }
-      res.innerHTML = hits.map(p => `
-        <div class="sr-item" onclick="goProduct('${p.slug}')">
-          <img class="sr-img" src="${p.primary_image || ''}" alt="${esc(p.name)}"
-               onerror="this.src='https://placehold.co/40/f9f9f9/878787?text=?'">
-          <div>
-            <div class="sr-name">${p.name}</div>
-            <div class="sr-cat">${p.category_name || ''}</div>
-          </div>
-          <div class="sr-price">₹${(p.discounted_price ?? p.price).toLocaleString('en-IN')}</div>
+      const data = await api('GET', `/products?search=${encodeURIComponent(q)}&limit=6`);
+      const hits = data?.data?.products || [];
+      if (!hits.length || !r) { if(r) r.style.display='none'; return; }
+      r.innerHTML = hits.map(p => `
+        <div class="sr-item" onclick="location='product-detail.html?slug=${p.slug}'">
+          <img class="sr-img" src="${p.primary_image||''}" onerror="this.src='https://placehold.co/40/f9f9f9/878787?text=?'">
+          <div><div class="sr-name">${escapeHtml(p.name||'')}</div><div class="sr-cat">${escapeHtml(p.category_name||'')}</div></div>
+          <div class="sr-price">₹${Number(p.discounted_price??p.price).toLocaleString('en-IN')}</div>
         </div>`).join('');
-      res.style.display = 'block';
-    } catch { res.style.display = 'none'; }
+      r.style.display = 'block';
+    } catch { if(r) r.style.display='none'; }
   }, 300);
 }
-
-function showSR() { const v = document.getElementById('search-input').value; if (v) handleSearch(v); }
-function hideSR() { document.getElementById('search-results').style.display = 'none'; }
+function showSR() { const v=document.getElementById('search-input'); if(v?.value) handleSearch(v.value); }
+function hideSR() { const r=document.getElementById('search-results'); if(r) r.style.display='none'; }
 
 // ─── MISC ─────────────────────────────────────────────────────────────────────
 function copyCode(code) {
-  navigator.clipboard?.writeText(code).catch(() => {});
-  showToast('📋 Code ' + code + ' copied!');
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._to); t._to = setTimeout(() => t.classList.remove('show'), 2500);
+  navigator.clipboard?.writeText(code).catch(()=>{});
+  toast('📋 Code '+code+' copied!', 'success');
 }
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
-checkUser();
+_cart = _getCart();
+_checkUser();
 updateCartFab();
-loadCategories();      // categories থেকে API
-loadProducts('all');   // সব seller + admin products API থেকে
+loadCategories();
+loadProducts('all');
 </script>
 </body>
 </html>
