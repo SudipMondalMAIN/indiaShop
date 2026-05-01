@@ -239,7 +239,7 @@ img{display:block;max-width:100%}
 <div class="success-screen" id="success-screen">
   <div class="success-ico">🎉</div>
   <div class="success-t">Order Placed!</div>
-  <div class="success-s">Your order has been placed successfully.<br>We'll notify you when it shipped!</div>
+  <div class="success-s">Your order has been placed successfully.<br>We'll notify you when it's shipped!</div>
   <div class="success-oid" id="success-oid"></div>
   <button class="btn-primary" style="max-width:260px;margin:0 0 14px" onclick="location.href='orders.html'">View My Orders</button>
   <a href="../index.html" style="font-size:13px;color:var(--blue);font-weight:600">Continue Shopping →</a>
@@ -261,13 +261,30 @@ const PAY_LABELS = {
 };
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-let _step        = 1;
-let _addresses   = [];
+let _step         = 1;
+let _addresses    = [];
 let _selectedAddr = null;
-let _selPay      = 'cod';
-let _cartItems   = [];
-let _cartTotal   = 0;
-let _cartMrp     = 0;
+let _selPay       = 'cod';
+let _cartItems    = [];   // flat, normalized items
+let _cartTotal    = 0;
+let _cartMrp      = 0;
+
+// ── FLATTEN CART ITEMS ─────────────────────────────────────────────────────────
+// API থেকে আসা cart items গুলো normalize করে একটা consistent format এ রাখি
+function flattenCartItems(rawItems) {
+  return (rawItems || []).map(it => ({
+    id:               it.id   || it._id   || it.item_id || '',
+    product_name:     it.product?.name    || it.product_name || it.name || '',
+    primary_image:    it.product?.primary_image || it.product_image || it.primary_image || '',
+    discounted_price: it.product?.discounted_price ?? it.unit_price ?? it.discounted_price ?? 0,
+    original_price:   it.product?.price   ?? it.product?.discounted_price ?? it.original_price ?? it.unit_price ?? 0,
+    unit_price:       it.product?.discounted_price ?? it.unit_price ?? 0,
+    quantity:         it.quantity || 1,
+    slug:             it.product?.slug    || it.slug    || '',
+    brand:            it.product?.brand   || it.brand   || '',
+    subtotal:         it.subtotal || 0,
+  }));
+}
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 async function init() {
@@ -276,14 +293,29 @@ async function init() {
     api('GET', '/users/addresses'),
   ]);
 
-  const cartData = cartRes.status === 'fulfilled' ? (cartRes.value?.data ?? cartRes.value) : null;
-  _cartItems     = cartData?.items || [];
-  _cartTotal     = cartData?.total_amount ?? _cartItems.reduce((s,i) => s + (i.discounted_price ?? i.unit_price ?? 0) * i.quantity, 0);
-  _cartMrp       = _cartItems.reduce((s,i) => s + (i.original_price ?? i.unit_price ?? i.discounted_price ?? 0) * i.quantity, 0);
+  // ── Cart data নিয়ে flatten করো ──
+  const rawCart = cartRes.status === 'fulfilled'
+    ? (cartRes.value?.data ?? cartRes.value)
+    : null;
 
-  if (!_cartItems.length) { window.location.href = 'cart.html'; return; }
+  if (!rawCart || !rawCart.items || rawCart.items.length === 0) {
+    window.location.href = 'cart.html';
+    return;
+  }
 
-  _addresses = addrRes.status === 'fulfilled' ? (addrRes.value?.data ?? addrRes.value ?? []) : [];
+  _cartItems = flattenCartItems(rawCart.items);
+
+  // total: API দেয় নাকি নিজে calculate করো
+  _cartTotal = rawCart.total_amount
+    ?? _cartItems.reduce((s, i) => s + i.discounted_price * i.quantity, 0);
+
+  // mrp: always calculate from items
+  _cartMrp = _cartItems.reduce((s, i) => s + i.original_price * i.quantity, 0);
+
+  // ── Addresses ──
+  _addresses = addrRes.status === 'fulfilled'
+    ? (addrRes.value?.data ?? addrRes.value ?? [])
+    : [];
   if (!Array.isArray(_addresses)) _addresses = [];
 
   // pre-select address passed from cart page
@@ -291,7 +323,9 @@ async function init() {
   if (preAddrId) _selectedAddr = _addresses.find(a => (a.id || a._id) === preAddrId);
   if (!_selectedAddr) _selectedAddr = _addresses.find(a => a.is_default) || _addresses[0] || null;
 
+  // Bottom bar total update
   document.getElementById('bb-total').textContent = fmt(_cartTotal);
+
   renderAddresses();
 }
 
@@ -303,8 +337,8 @@ function renderAddresses() {
     return;
   }
   list.innerHTML = _addresses.map(a => {
-    const id   = a.id || a._id || '';
-    const sel  = _selectedAddr && ((_selectedAddr.id || _selectedAddr._id) === id);
+    const id  = a.id || a._id || '';
+    const sel = _selectedAddr && ((_selectedAddr.id || _selectedAddr._id) === id);
     const line = [a.line1, a.line2, a.city, a.state, a.pincode].filter(Boolean).join(', ');
     return `
       <div class="addr-opt${sel ? ' sel' : ''}" id="ao-${esc(id)}" onclick="pickAddr('${esc(id)}')">
@@ -320,7 +354,10 @@ function renderAddresses() {
 
 function pickAddr(id) {
   _selectedAddr = _addresses.find(a => (a.id || a._id) === id);
-  document.querySelectorAll('.addr-opt').forEach(el => { el.classList.remove('sel'); el.querySelector('input').checked = false; });
+  document.querySelectorAll('.addr-opt').forEach(el => {
+    el.classList.remove('sel');
+    el.querySelector('input').checked = false;
+  });
   const el = document.getElementById('ao-' + id);
   if (el) { el.classList.add('sel'); el.querySelector('input').checked = true; }
 }
@@ -343,8 +380,8 @@ function openStep(n) {
     const smry = document.getElementById('smry' + i);
     const chg  = document.getElementById('chg'  + i);
     const card = document.getElementById('card' + i);
-    const dot  = document.getElementById('sd' + i);
-    const sc   = document.getElementById('sc' + i);
+    const dot  = document.getElementById('sd'   + i);
+    const sc   = document.getElementById('sc'   + i);
 
     body.classList.remove('open');
     smry.style.display = 'none';
@@ -356,21 +393,26 @@ function openStep(n) {
       sc.textContent = '✓';
       smry.style.display = 'block';
       chg.style.display  = '';
-      document.getElementById('sl' + i)?.classList.add('done');
+      const sl = document.getElementById('sl' + i);
+      if (sl) sl.classList.add('done');
     } else if (i === n) {
       dot.classList.remove('done'); dot.classList.add('active');
+      sc.textContent = String(i);
       body.classList.add('open');
-      document.getElementById('sl' + i)?.classList.remove('done');
+      const sl = document.getElementById('sl' + i);
+      if (sl) sl.classList.remove('done');
     } else {
       dot.classList.remove('active','done');
+      sc.textContent = String(i);
       card.classList.add('locked');
     }
   });
 
-  // bottom bar
+  // ── Bottom bar ──
   const stepBtn  = document.getElementById('step-btn');
   const placeBtn = document.getElementById('place-btn');
   const bbLbl    = document.getElementById('bb-lbl');
+
   if (n === 3) {
     stepBtn.style.display  = 'none';
     placeBtn.style.display = '';
@@ -408,18 +450,26 @@ function confirmPayment() {
 // ── REVIEW ────────────────────────────────────────────────────────────────────
 function renderReview() {
   const a = _selectedAddr;
-  const addrLine = a ? [a.full_name || a.name, a.line1, a.line2, a.city, a.state, a.pincode].filter(Boolean).join(', ') : '';
-  document.getElementById('rv-addr-box').innerHTML = `<b>📍 Delivering to:</b><br>${esc(addrLine)}`;
-  document.getElementById('rv-pay-box').innerHTML  = `<b>💳 Payment:</b> ${esc(PAY_LABELS[_selPay] || _selPay)}`;
+  const addrLine = a
+    ? [a.full_name || a.name, a.line1, a.line2, a.city, a.state, a.pincode].filter(Boolean).join(', ')
+    : '';
 
+  document.getElementById('rv-addr-box').innerHTML =
+    `<b>📍 Delivering to:</b><br>${esc(addrLine)}`;
+  document.getElementById('rv-pay-box').innerHTML =
+    `<b>💳 Payment:</b> ${esc(PAY_LABELS[_selPay] || _selPay)}`;
+
+  // ── Items list ──
   document.getElementById('rv-items').innerHTML = _cartItems.map(item => {
-    const img   = item.primary_image || item.product_image || '';
-    const name  = item.product_name  || item.name || '';
+    const img   = item.primary_image || '';
+    const name  = item.product_name  || 'Product';
     const price = item.discounted_price ?? item.unit_price ?? 0;
     return `
       <div class="rv-item">
-        <div class="rv-img"><img src="${esc(img || 'https://placehold.co/50x50/f1f3f6/878787?text=?')}"
-             onerror="this.src='https://placehold.co/50x50/f1f3f6/878787?text=?'" loading="lazy"></div>
+        <div class="rv-img">
+          <img src="${esc(img || 'https://placehold.co/50x50/f1f3f6/878787?text=?')}"
+               onerror="this.src='https://placehold.co/50x50/f1f3f6/878787?text=?'" loading="lazy">
+        </div>
         <div style="flex:1;min-width:0">
           <div class="rv-name">${esc(name)}</div>
           <div class="rv-qty">Qty: ${item.quantity}</div>
@@ -428,21 +478,30 @@ function renderReview() {
       </div>`;
   }).join('');
 
+  // ── Price breakdown ──
   const saved = Math.max(0, _cartMrp - _cartTotal);
-  document.getElementById('rv-mrp').textContent   = fmt(_cartMrp);
-  document.getElementById('rv-disc').textContent  = saved > 0 ? `−${fmt(saved)}` : '₹0';
+
+  document.getElementById('rv-mrp').textContent  = fmt(_cartMrp);
+  document.getElementById('rv-disc').textContent = saved > 0 ? `−${fmt(saved)}` : '₹0';
   document.getElementById('rv-disc-row').style.display = saved > 0 ? '' : 'none';
   document.getElementById('rv-total').textContent = fmt(_cartTotal);
-  document.getElementById('bb-total').textContent = fmt(_cartTotal);
+  document.getElementById('bb-total').textContent  = fmt(_cartTotal);
+
   const svBox = document.getElementById('rv-save');
-  if (saved > 0) { svBox.textContent = `🎉 You save ${fmt(saved)} on this order!`; svBox.style.display = ''; }
+  if (saved > 0) {
+    svBox.textContent    = `🎉 You save ${fmt(saved)} on this order!`;
+    svBox.style.display  = '';
+  } else {
+    svBox.style.display  = 'none';
+  }
 }
 
 // ── PLACE ORDER ───────────────────────────────────────────────────────────────
 async function placeOrder() {
   if (!_selectedAddr) { toast('No address selected', 'error'); return; }
+
   const btn = document.getElementById('place-btn');
-  btn.disabled = true;
+  btn.disabled    = true;
   btn.textContent = 'Placing Order…';
 
   try {
@@ -450,13 +509,22 @@ async function placeOrder() {
       address_id:     _selectedAddr.id || _selectedAddr._id,
       payment_method: _selPay,
     });
+
     Cart.clear();
     sessionStorage.removeItem('co_addr_id');
-    const orderId = order?.order_id || order?.id || order?._id || 'N/A';
+
+    const orderId = order?.data?.order_id
+      || order?.data?.id
+      || order?.data?._id
+      || order?.order_id
+      || order?.id
+      || order?._id
+      || 'N/A';
+
     document.getElementById('success-oid').textContent = `Order ID: ${orderId}`;
     document.getElementById('success-screen').style.display = 'flex';
   } catch {
-    btn.disabled = false;
+    btn.disabled    = false;
     btn.textContent = '🛒 Place Order';
   }
 }
