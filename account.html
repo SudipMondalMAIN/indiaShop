@@ -1,196 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Account — indiaShop</title>
-<link rel="stylesheet" href="static/css/style.css">
-<link rel="stylesheet" href="static/css/nav.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
-.account-header {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
-  display: flex; align-items: center; gap: 16px; color: #fff;
-}
-.account-avatar {
-  width: 64px; height: 64px; border-radius: 50%;
-  background: rgba(255,255,255,0.2); display: flex; align-items: center;
-  justify-content: center; font-size: 26px; font-weight: 700; flex-shrink: 0;
-}
-.account-name { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
-.account-email { font-size: 13px; opacity: 0.8; }
-.account-phone { font-size: 13px; opacity: 0.8; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{display:none}*{scrollbar-width:none}
+:root{--green:#1ba345;--green-d:#147a34;--green-l:#e8f8ee;--orange:#ff6600;--orange-l:#fff3eb;--red:#e53935;--blue:#1565c0;--bg:#f1f3f6;--white:#fff;--border:#e0e0e0;--border2:#f0f0f0;--t1:#212121;--t2:#555;--t3:#878787;--t4:#aaa;--header:#1ba345;--r2:2px;--r4:4px;--r8:8px;--shadow:0 1px 4px rgba(0,0,0,.12)}
+html,body{font-family:'Mukta',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;font-size:14px}
+a{text-decoration:none;color:inherit}
+button{font-family:'Mukta',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+img{display:block;max-width:100%;object-fit:cover}
+.page{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;position:relative}
+.header{position:sticky;top:0;z-index:100;background:var(--header);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header-top{display:flex;align-items:center;gap:10px;padding:10px 14px 10px}
+.logo{font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;flex-shrink:0}
+.logo span{color:#ffeb3b}
+.logo small{font-size:11px;font-weight:600;display:block;color:rgba(255,255,255,.8);margin-top:-6px;letter-spacing:.5px}
+.header-right{display:flex;align-items:center;gap:2px;flex-shrink:0;margin-left:auto}
+.hbtn{display:flex;flex-direction:column;align-items:center;gap:1px;color:#fff;font-size:10px;font-weight:600;position:relative;padding:2px 5px;cursor:pointer;text-decoration:none;border:none;background:none;font-family:'Mukta',sans-serif}
+.hbtn svg{width:22px;height:22px}
+.hbadge{position:absolute;top:-3px;right:0;min-width:16px;height:16px;border-radius:99px;background:#ff3d00;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--header);padding:0 3px}
 
-.menu-section { background: var(--surface); border-radius: var(--radius); margin-bottom: 12px; box-shadow: var(--shadow-sm); overflow: hidden; }
-.menu-section-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; padding: 12px 16px 6px; }
-.menu-item {
-  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
-  border-bottom: 1px solid var(--border); cursor: pointer;
-  transition: var(--transition); text-decoration: none; color: var(--text);
-}
-.menu-item:last-child { border-bottom: none; }
-.menu-item:hover { background: var(--bg); }
-.menu-item-icon {
-  width: 38px; height: 38px; border-radius: var(--radius);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.menu-item-icon.blue { background: var(--primary-light); color: var(--primary); }
-.menu-item-icon.orange { background: var(--accent-light); color: var(--accent); }
-.menu-item-icon.green { background: #e8f5e9; color: var(--success); }
-.menu-item-icon.gray { background: var(--bg); color: var(--text2); }
-.menu-item-info { flex: 1; }
-.menu-item-title { font-size: 14px; font-weight: 500; }
-.menu-item-sub { font-size: 12px; color: var(--text3); margin-top: 1px; }
-.menu-item-arrow { color: var(--text3); }
+/* ── SCROLL BODY ── */
+.scroll-body{overflow-y:auto;padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
 
-.logout-btn { width: 100%; background: var(--surface); border-radius: var(--radius); padding: 14px 16px; font-size: 14px; font-weight: 500; color: var(--danger); display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-sm); }
-.logout-btn:hover { background: #fce4e4; }
+/* ── PROFILE HERO CARD ── */
+.profile-hero{margin:10px;border-radius:var(--r8);overflow:hidden;box-shadow:var(--shadow)}
+.profile-hero-bg{background:linear-gradient(120deg,#064e1f 0%,#1ba345 60%,#34d058 100%);padding:20px 18px 22px;position:relative;overflow:hidden}
+.ph-circle1{position:absolute;right:-30px;top:-30px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.ph-circle2{position:absolute;left:-20px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
+.ph-inner{display:flex;align-items:center;gap:16px;position:relative}
+.ph-avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.2);border:2.5px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:#fff;flex-shrink:0}
+.ph-info{flex:1;min-width:0}
+.ph-name{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-email{font-size:12px;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph-phone{font-size:12px;color:rgba(255,255,255,.7);margin-top:1px}
+.ph-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:2px 9px;border-radius:99px;margin-top:8px;width:fit-content}
+.ph-stats{display:flex;background:rgba(0,0,0,.12);border-top:1px solid rgba(255,255,255,.1)}
+.ph-stat{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;border-right:1px solid rgba(255,255,255,.1)}
+.ph-stat:last-child{border-right:none}
+.ph-stat-n{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;color:#ffeb3b;line-height:1}
+.ph-stat-l{font-size:10px;font-weight:600;color:rgba(255,255,255,.8);margin-top:2px}
 
-.sell-banner {
-  background: linear-gradient(90deg,#2874f0,#1a5dc8); border-radius: var(--radius);
-  padding: 18px; margin-bottom: 12px; cursor: pointer;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.sell-banner-text { font-size: 15px; font-weight: 700; color: #fff; }
-.sell-banner-sub { font-size: 12px; color: rgba(255,255,255,0.8); margin-top: 2px; }
-.sell-banner-btn { background: rgba(255,255,255,0.2); color: #fff; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 20px; }
+/* ── SELL BANNER ── */
+.sell-banner{margin:0 10px 8px;border-radius:var(--r8);overflow:hidden;background:linear-gradient(135deg,#1565c0,#0d47a1);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);cursor:pointer}
+.sb-left .sb-t{font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;color:#fff;margin-bottom:1px}
+.sb-left .sb-s{font-size:11px;color:rgba(255,255,255,.8)}
+.sb-btn{background:#fff;color:#0d47a1;font-size:12px;font-weight:700;padding:7px 13px;border-radius:var(--r4);flex-shrink:0;cursor:pointer;text-decoration:none;display:block}
+
+/* ── SECTION CARDS ── */
+.menu-sec{background:#fff;margin:0 0 8px;border-radius:0;overflow:hidden}
+.menu-sec-title{font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;padding:12px 14px 6px}
+.menu-item{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:1px solid var(--border2);cursor:pointer;transition:.15s;text-decoration:none;color:var(--t1)}
+.menu-item:last-child{border-bottom:none}
+.menu-item:active{background:var(--bg)}
+.mi-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.mi-icon.green{background:var(--green-l);color:var(--green)}
+.mi-icon.orange{background:var(--orange-l);color:var(--orange)}
+.mi-icon.blue{background:#e3f0ff;color:var(--blue)}
+.mi-icon.gray{background:var(--bg);color:var(--t3)}
+.mi-icon.red{background:#fce4e4;color:var(--red)}
+.mi-info{flex:1;min-width:0}
+.mi-title{font-size:14px;font-weight:600;color:var(--t1)}
+.mi-sub{font-size:11.5px;color:var(--t3);margin-top:1px}
+.mi-arrow{color:var(--t4);flex-shrink:0}
+.mi-badge{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;flex-shrink:0}
+.mi-badge.orange{background:var(--orange)}
+
+/* ── LOGOUT ── */
+.logout-wrap{margin:0 0 8px;background:#fff}
+.logout-btn{width:100%;display:flex;align-items:center;gap:12px;padding:14px 14px;font-size:14px;font-weight:600;color:var(--red)}
+.logout-btn:active{background:#fce4e4}
+
+/* ── APP VERSION ── */
+.app-ver{text-align:center;font-size:11px;color:var(--t4);padding:8px 0 4px}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;justify-content:center}
+.bottom-nav-inner{width:100%;max-width:480px;background:#fff;border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 8px rgba(0,0,0,.08)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 4px;cursor:pointer;text-decoration:none;color:var(--t3);font-size:10px;font-weight:600;border:none;background:none;font-family:'Mukta',sans-serif}
+.bn.active{color:var(--green)}
+.bn svg{width:23px;height:23px;margin-bottom:1px}
+.bn-indicator{width:4px;height:4px;border-radius:50%;background:var(--green);margin-top:2px;opacity:0}
+.bn.active .bn-indicator{opacity:1}
+
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(min-width:481px){.page{box-shadow:0 0 40px rgba(0,0,0,.15);border-left:1px solid var(--border);border-right:1px solid var(--border)}}
 </style>
 </head>
 <body>
-<nav class="navbar"><div class="container"></div></nav>
-<div class="page-content">
-<div class="container" style="max-width:600px">
+<div class="page">
 
-  <div id="account-header" class="account-header">
-    <div class="account-avatar" id="avatar-text">?</div>
-    <div>
-      <div class="account-name" id="acc-name">Loading...</div>
-      <div class="account-email" id="acc-email"></div>
-      <div class="account-phone" id="acc-phone"></div>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-top">
+    <a class="logo" href="index.html">india<span>Shop</span><small>👤 My Account</small></a>
+    <div class="header-right">
+      <a class="hbtn" href="wishlist.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Wishlist</span>
+      </a>
+      <a class="hbtn" href="cart.html" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        <span>Cart</span>
+        <span class="hbadge" id="cart-hbadge" style="display:none">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="scroll-body">
+
+  <!-- PROFILE HERO -->
+  <div class="profile-hero">
+    <div class="profile-hero-bg">
+      <div class="ph-circle1"></div>
+      <div class="ph-circle2"></div>
+      <div class="ph-inner">
+        <div class="ph-avatar" id="ph-avatar">?</div>
+        <div class="ph-info">
+          <div class="ph-name" id="ph-name">Loading…</div>
+          <div class="ph-email" id="ph-email"></div>
+          <div class="ph-phone" id="ph-phone"></div>
+          <div class="ph-badge">✅ Verified Member</div>
+        </div>
+      </div>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-stat">
+        <div class="ph-stat-n" id="stat-orders">0</div>
+        <div class="ph-stat-l">Orders</div>
+      </div>
+      <div class="ph-stat">
+        <div class="ph-stat-n" id="stat-wishlist">0</div>
+        <div class="ph-stat-l">Wishlist</div>
+      </div>
+      <div class="ph-stat">
+        <div class="ph-stat-n" id="stat-addresses">0</div>
+        <div class="ph-stat-l">Addresses</div>
+      </div>
     </div>
   </div>
 
-  <!-- Sell Banner (if not seller) -->
+  <!-- SELL BANNER -->
   <div class="sell-banner" id="sell-banner" onclick="window.location='seller/register.html'" style="display:none">
-    <div>
-      <div class="sell-banner-text">Sell on indiaShop</div>
-      <div class="sell-banner-sub">Create your seller account · Free</div>
+    <div class="sb-left">
+      <div class="sb-t">🏪 Sell on indiaShop</div>
+      <div class="sb-s">Reach lakhs of customers · Zero listing fee!</div>
     </div>
-    <div class="sell-banner-btn">Start Selling →</div>
+    <div class="sb-btn">Start Selling →</div>
   </div>
 
-  <!-- Orders & Shopping -->
-  <div class="menu-section">
-    <div class="menu-section-title">My Shopping</div>
+  <!-- MY SHOPPING -->
+  <div class="menu-sec">
+    <div class="menu-sec-title">My Shopping</div>
+
     <a href="orders.html" class="menu-item">
-      <div class="menu-item-icon blue">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <div class="mi-icon blue">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">My Orders</div>
-        <div class="menu-item-sub">Track, return or buy again</div>
+      <div class="mi-info">
+        <div class="mi-title">My Orders</div>
+        <div class="mi-sub">Track, return or buy again</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
+
     <a href="wishlist.html" class="menu-item">
-      <div class="menu-item-icon orange">
+      <div class="mi-icon orange">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Wishlist</div>
-        <div class="menu-item-sub">Saved products</div>
+      <div class="mi-info">
+        <div class="mi-title">Wishlist</div>
+        <div class="mi-sub">Saved products</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+
+    <a href="cart.html" class="menu-item">
+      <div class="mi-icon green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </div>
+      <div class="mi-info">
+        <div class="mi-title">My Cart</div>
+        <div class="mi-sub">Items ready to checkout</div>
+      </div>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
   </div>
 
-  <!-- Account Settings -->
-  <div class="menu-section">
-    <div class="menu-section-title">Account Settings</div>
+  <!-- ACCOUNT SETTINGS -->
+  <div class="menu-sec">
+    <div class="menu-sec-title">Account Settings</div>
+
     <a href="profile.html" class="menu-item">
-      <div class="menu-item-icon blue">
+      <div class="mi-icon green">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Edit Profile</div>
-        <div class="menu-item-sub">Name, phone, email</div>
+      <div class="mi-info">
+        <div class="mi-title">Edit Profile</div>
+        <div class="mi-sub">Name, phone, email</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
+
     <a href="addresses.html" class="menu-item">
-      <div class="menu-item-icon green">
+      <div class="mi-icon orange">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Saved Addresses</div>
-        <div class="menu-item-sub">Home, work and other addresses</div>
+      <div class="mi-info">
+        <div class="mi-title">Saved Addresses</div>
+        <div class="mi-sub">Home, work and other addresses</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
+
     <a href="payment-methods.html" class="menu-item">
-      <div class="menu-item-icon orange">
+      <div class="mi-icon blue">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Saved Payment Methods</div>
-        <div class="menu-item-sub">Cards, UPI, wallets</div>
+      <div class="mi-info">
+        <div class="mi-title">Saved Payment Methods</div>
+        <div class="mi-sub">Cards, UPI, wallets</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
   </div>
 
-  <!-- Help -->
-  <div class="menu-section">
-    <div class="menu-section-title">Help & Support</div>
+  <!-- OFFERS & REWARDS -->
+  <div class="menu-sec">
+    <div class="menu-sec-title">Offers & Rewards</div>
+
+    <a href="coupons.html" class="menu-item">
+      <div class="mi-icon orange">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      </div>
+      <div class="mi-info">
+        <div class="mi-title">My Coupons</div>
+        <div class="mi-sub">Use code FRESH50 for ₹150 off</div>
+      </div>
+      <span class="mi-badge orange">New</span>
+    </a>
+
+    <a href="referral.html" class="menu-item">
+      <div class="mi-icon green">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <div class="mi-info">
+        <div class="mi-title">Refer & Earn</div>
+        <div class="mi-sub">Invite friends · Earn ₹50 each</div>
+      </div>
+      <span class="mi-badge">Hot 🔥</span>
+    </a>
+  </div>
+
+  <!-- HELP & SUPPORT -->
+  <div class="menu-sec">
+    <div class="menu-sec-title">Help & Support</div>
+
     <a href="help.html" class="menu-item">
-      <div class="menu-item-icon gray">
+      <div class="mi-icon gray">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Help Center</div>
-        <div class="menu-item-sub">FAQ, returns, refunds</div>
+      <div class="mi-info">
+        <div class="mi-title">Help Center</div>
+        <div class="mi-sub">FAQ, returns, refunds</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
+
     <a href="mailto:support@indiashop.com" class="menu-item">
-      <div class="menu-item-icon gray">
+      <div class="mi-icon gray">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
       </div>
-      <div class="menu-item-info">
-        <div class="menu-item-title">Contact Us</div>
-        <div class="menu-item-sub">Email support</div>
+      <div class="mi-info">
+        <div class="mi-title">Contact Us</div>
+        <div class="mi-sub">support@indiashop.com</div>
       </div>
-      <svg class="menu-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </a>
+
+    <a href="about.html" class="menu-item">
+      <div class="mi-icon gray">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      </div>
+      <div class="mi-info">
+        <div class="mi-title">About indiaShop</div>
+        <div class="mi-sub">Version 1.0.0</div>
+      </div>
+      <svg class="mi-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
     </a>
   </div>
 
-  <button class="logout-btn" onclick="logout()">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-    Logout
-  </button>
-  <div style="height:8px"></div>
+  <!-- LOGOUT -->
+  <div class="logout-wrap">
+    <button class="logout-btn" onclick="logout()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Logout from this account
+    </button>
+  </div>
 
-</div>
-</div>
-<nav class="bottom-nav"></nav>
+  <div class="app-ver">indiaShop v1.0.0 · Made with ❤️ in India</div>
+  <div style="height:4px"></div>
+
+</div><!-- /scroll-body -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bn" onclick="window.location='index.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span><span class="bn-indicator"></span>
+    </button>
+    <button class="bn" onclick="window.location='products.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explore</span><span class="bn-indicator"></span>
+    </button>
+    <button class="bn" onclick="window.location='products.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Categories</span><span class="bn-indicator"></span>
+    </button>
+    <button class="bn" onclick="window.location='orders.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>Orders</span><span class="bn-indicator"></span>
+    </button>
+    <button class="bn active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Account</span><span class="bn-indicator"></span>
+    </button>
+  </div>
+</nav>
+
+<div class="toast-wrap" id="toast-wrap"></div>
 
 <script src="static/js/main.js"></script>
 <script>
+  // Redirect if not logged in
   if (!Auth.isLoggedIn()) window.location.href = 'login.html';
-  buildNavbar('account');
 
+  // ── Populate user info ──────────────────────────────────────────────────────
   const user = Auth.user();
   if (user) {
-    document.getElementById('avatar-text').textContent = user.name?.charAt(0)?.toUpperCase() || '?';
-    document.getElementById('acc-name').textContent = user.name || 'User';
-    document.getElementById('acc-email').textContent = user.email || '';
-    document.getElementById('acc-phone').textContent = user.phone ? `+91 ${user.phone}` : '';
-    if (user.role !== 'seller') document.getElementById('sell-banner').style.display = 'flex';
+    const initials = (user.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('ph-avatar').textContent  = initials;
+    document.getElementById('ph-name').textContent    = user.name  || 'User';
+    document.getElementById('ph-email').textContent   = user.email || '';
+    document.getElementById('ph-phone').textContent   = user.phone ? `📞 +91 ${user.phone}` : '';
+
+    // Show sell banner only for non-sellers
+    if (user.role !== 'seller') {
+      document.getElementById('sell-banner').style.display = 'flex';
+    }
   }
 
+  // ── Cart badge in header ────────────────────────────────────────────────────
+  (function updateCartBadge() {
+    try {
+      const cart  = JSON.parse(localStorage.getItem('is_cart') || '{}');
+      const count = Object.values(cart).reduce((a, b) => a + (b.qty || 0), 0);
+      const hb    = document.getElementById('cart-hbadge');
+      if (hb && count > 0) { hb.textContent = count; hb.style.display = 'flex'; }
+    } catch {}
+  })();
+
+  // ── Quick stats from localStorage ──────────────────────────────────────────
+  (function loadStats() {
+    const wl   = JSON.parse(localStorage.getItem('is_wishlist') || '[]');
+    const cart = JSON.parse(localStorage.getItem('is_cart') || '{}');
+    document.getElementById('stat-wishlist').textContent   = wl.length;
+    // Orders & addresses would come from API — show dash if unavailable
+    document.getElementById('stat-orders').textContent    = '—';
+    document.getElementById('stat-addresses').textContent = '—';
+
+    // Try fetching order count from API
+    if (typeof api === 'function') {
+      api('GET', '/orders?limit=1').then(d => {
+        const total = d?.data?.total || d?.data?.orders?.length || 0;
+        document.getElementById('stat-orders').textContent = total;
+      }).catch(() => {});
+
+      api('GET', '/addresses').then(d => {
+        const total = (d?.data || []).length;
+        document.getElementById('stat-addresses').textContent = total;
+      }).catch(() => {});
+    }
+  })();
+
+  // ── Logout ──────────────────────────────────────────────────────────────────
   function logout() {
-    Auth.clear();
-    Cart.clear();
-    window.location.href = '../index.html';
+    if (typeof Auth !== 'undefined') Auth.clear();
+    if (typeof Cart !== 'undefined') Cart.clear();
+    localStorage.removeItem('is_cart');
+    window.location.href = 'index.html';
   }
 </script>
 </body>
