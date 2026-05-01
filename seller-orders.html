@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Orders — indiaShop Seller</title>
-<link rel="stylesheet" href="../../static/css/style.css">
-<link rel="stylesheet" href="../../static/css/nav.css">
+<link rel="stylesheet" href="static/css/style.css">
+<link rel="stylesheet" href="static/css/nav.css">
 <style>
 .seller-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); padding: 22px; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
 .seller-header-left h2 { font-size: 20px; font-weight: 800; }
@@ -63,23 +63,23 @@
   </div>
 
   <div class="seller-nav">
-    <a href="dashboard.html">
+    <a href="seller-dashboard.html">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Dashboard
     </a>
-    <a href="products.html">
+    <a href="seller-products.html">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
       Products
     </a>
-    <a href="orders.html" class="active">
+    <a href="seller-orders.html" class="active">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       Orders
     </a>
-    <a href="add-product.html">
+    <a href="seller-add-product.html">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       Add Product
     </a>
-    <a href="../../index.html" style="margin-left:auto">
+    <a href="index.html" style="margin-left:auto">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
       View Store
     </a>
@@ -123,10 +123,10 @@
 </div></div>
 <nav class="bottom-nav"></nav>
 
-<script src="../../static/js/main.js"></script>
+<script src="static/js/main.js"></script>
 <script>
-if (!Auth.isLoggedIn()) window.location.href = '../login.html';
-if (!Auth.isAdmin() && !Auth.isSeller()) window.location.href = '../account.html';
+if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+if (!Auth.isSeller()) window.location.href = 'account.html';
 buildNavbar('account');
 
 let allOrders = [];
