@@ -502,15 +502,19 @@ function _makeCard(p, wl) {
   </div>`;
 }
 
-function _addCart(id, price, name, img) {
+async function _addCart(id, price, name, img) {
   _cart[id] = { price, qty:1, name, img };
   _saveCart(_cart);
-  console.log('Saved cart:', localStorage.getItem('is_cart'));
   _refreshRow(id, price, name, img);
   updateCartFab();
   toast('✅ Added to cart!', 'success');
-}
 
+  if (Auth.isLoggedIn()) {
+    try {
+      await api('POST', '/cart', { product_id: id, quantity: 1 });
+    } catch(e) {}
+  }
+}
 function _chgQty(id, d, price, name, img) {
   if (!_cart[id]) _cart[id] = { price, qty:0, name, img };
   _cart[id].qty = Math.max(0, _cart[id].qty + d);
