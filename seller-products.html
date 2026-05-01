@@ -28,10 +28,10 @@
 <div class="container">
 
   <div class="seller-nav">
-    <a href="dashboard.html">Dashboard</a>
-    <a href="products.html" class="active">Products</a>
-    <a href="orders.html">Orders</a>
-    <a href="add-product.html">Add Product</a>
+    <a href="seller-dashboard.html">Dashboard</a>
+    <a href="seller-products.html" class="active">Products</a>
+    <a href="seller-orders.html">Orders</a>
+    <a href="seller-add-product.html">Add Product</a>
   </div>
 
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -58,18 +58,18 @@
 </div>
 <nav class="bottom-nav"></nav>
 
-<script src="../../static/js/main.js"></script>
+<script src="static/js/main.js"></script>
 <script>
-  if (!Auth.isLoggedIn()) window.location.href = '../login.html';
-  if (!Auth.isSeller() && !Auth.isAdmin()) window.location.href = '../account.html';
+  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+  if (!Auth.isSeller()) window.location.href = 'account.html';
   buildNavbar();
 
   let allProducts = [];
 
   async function loadProducts() {
     try {
-      const data = await api('GET', '/seller/products');
-      allProducts = data.products || [];
+      const res = await api('GET', '/seller/products');
+      allProducts = (res.data && res.data.products) ? res.data.products : [];
       document.getElementById('prod-count').textContent = `(${allProducts.length})`;
       renderProducts();
     } catch(e) { document.getElementById('prod-list').innerHTML = '<p class="text-muted p-4">Failed to load.</p>'; }
@@ -84,27 +84,27 @@
       return true;
     });
     const list = document.getElementById('prod-list');
-    if (!prods.length) { list.innerHTML = `<div class="empty-state"><p>No products found</p><a href="add-product.html" class="btn btn-primary">Add Your First Product</a></div>`; return; }
+    if (!prods.length) { list.innerHTML = `<div class="empty-state"><p>No products found</p><a href="seller-add-product.html" class="btn btn-primary">Add Your First Product</a></div>`; return; }
     list.innerHTML = prods.map(p => {
       const stockClass = p.stock === 0 ? 'out' : p.stock < 5 ? 'low' : 'ok';
       const stockText = p.stock === 0 ? 'Out of Stock' : p.stock < 5 ? `Low (${p.stock})` : `In Stock (${p.stock})`;
       return `
         <div class="prod-table-row">
-          <img class="prod-img" src="${p.image || 'https://placehold.co/52x52?text=Img'}" alt="${p.name}">
+          <img class="prod-img" src="${p.primary_image || 'https://placehold.co/52x52?text=Img'}" alt="${p.name}">
           <div class="prod-info">
             <div class="prod-name-cell">${p.name}</div>
-            <div class="prod-meta">${p.category || ''}</div>
+            <div class="prod-meta">${p.category_name || ''}</div>
           </div>
           <div style="text-align:center;min-width:80px">
             <span class="stock-badge ${stockClass}">${stockText}</span>
           </div>
           <div class="prod-price-cell">${formatPrice(p.price)}</div>
           <div style="display:flex;gap:6px">
-            <a href="add-product.html?id=${p.id}" class="btn btn-outline btn-sm">Edit</a>
-            <button class="btn btn-ghost btn-sm" onclick="toggleProduct(${p.id}, ${p.is_active})" style="color:${p.is_active ? 'var(--warning)' : 'var(--success)'}">
+            <a href="seller-add-product.html?id=${p.id}" class="btn btn-outline btn-sm">Edit</a>
+            <button class="btn btn-ghost btn-sm" onclick="toggleProduct('${p.id}', ${p.is_active})" style="color:${p.is_active ? 'var(--warning)' : 'var(--success)'}">
               ${p.is_active ? 'Deactivate' : 'Activate'}
             </button>
-            <button class="btn btn-ghost btn-sm text-danger" onclick="deleteProduct(${p.id})">Delete</button>
+            <button class="btn btn-ghost btn-sm text-danger" onclick="deleteProduct('${p.id}')">Delete</button>
           </div>
         </div>`;
     }).join('');
