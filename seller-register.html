@@ -122,7 +122,7 @@
       const updated = { ...user, role: 'seller' };
       Auth.set(Auth.token(), updated);
       toast('Application submitted! Redirecting...', 'success');
-      setTimeout(() => window.location.href = 'dashboard.html', 1200);
+      setTimeout(() => window.location.href = 'seller-dashboard.html', 1200);
     } catch(e) { toast(e.message, 'error'); }
     finally { btnLoading(btn, false); }
   }
