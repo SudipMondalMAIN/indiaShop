@@ -481,7 +481,7 @@ function _makeCard(p, wl) {
        </div>`
     : `<button class="pc-add" onclick="event.stopPropagation();_addCart('${sid}',${price},'${sname}','${simg}')">+ Add</button>`;
 
-  return `<div class="pc" onclick="location='product-detail.html?slug=${p.slug}'">
+  return `<div class="pc" data-pid="${sid}" data-price="${price}" data-name="${sname}" data-img="${simg}" onclick="location='product-detail.html?slug=${p.slug}'">
     <div class="pc-img-wrap">
       <img src="${escapeHtml(img)}" alt="${escapeHtml(p.name||'')}" loading="lazy"
            onerror="this.src='https://placehold.co/300x300/f9f9f9/878787?text=?'">
@@ -584,6 +584,29 @@ function copyCode(code) {
   navigator.clipboard?.writeText(code).catch(()=>{});
   toast('📋 Code '+code+' copied!', 'success');
 }
+
+// ─── PAGE VISIBILITY SYNC ─────────────────────────────────────────────────────
+// cart.html থেকে ফিরলে অথবা অন্য tab থেকে আসলে cart state refresh হবে
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    const newCart = _getCart();
+    _cart = newCart;
+    updateCartFab();
+    // product card-গুলো re-render করো যাতে Add/qty button update হয়
+    const grid = document.getElementById('prod-grid');
+    if (grid && grid.children.length > 0 && !grid.querySelector('.skel-card')) {
+      // currently rendered products থেকে re-render করো
+      document.querySelectorAll('.pc[data-pid]').forEach(card => {
+        const id = card.dataset.pid;
+        const price = parseFloat(card.dataset.price);
+        const name  = card.dataset.name;
+        const img   = card.dataset.img;
+        const row   = document.getElementById('ar-' + id);
+        if (row) _refreshRow(id, price, name, img);
+      });
+    }
+  }
+});
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 _cart = _getCart();
