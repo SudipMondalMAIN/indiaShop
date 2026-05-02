@@ -90,9 +90,13 @@ img{display:block;max-width:100%}
 .bb-lbl{font-size:13px;font-weight:600;color:var(--t2)}
 .bb-del{font-size:11px;font-weight:600;color:var(--green)}
 .bb-total{font-size:20px;font-weight:800}
-.step-btn{width:100%;background:var(--green);color:#fff;font-family:'Mukta',sans-serif;font-size:15px;font-weight:700;padding:13px;border-radius:var(--r4);cursor:pointer;border:none;box-shadow:0 3px 10px rgba(27,163,69,.35)}
+
+/* Step 1 button */
+.step-btn{width:100%;background:var(--green);color:#fff;font-family:'Mukta',sans-serif;font-size:15px;font-weight:700;padding:13px;border-radius:var(--r4);cursor:pointer;border:none;box-shadow:0 3px 10px rgba(27,163,69,.35);display:block}
 .step-btn:active{transform:scale(.98)}
-.place-btn{width:100%;background:var(--orange);color:#fff;font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;padding:13px;border-radius:var(--r4);cursor:pointer;border:none;display:none;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 14px rgba(255,102,0,.4);transition:.15s}
+
+/* Place Order button — hidden by default */
+.place-btn{width:100%;background:var(--orange);color:#fff;font-family:'Baloo 2',cursive;font-size:16px;font-weight:800;padding:13px;border-radius:var(--r4);cursor:pointer;border:none;align-items:center;justify-content:center;gap:8px;box-shadow:0 3px 14px rgba(255,102,0,.4);transition:.15s;display:none}
 .place-btn:active{transform:scale(.98)}
 .place-btn:disabled{opacity:.6;cursor:not-allowed}
 
@@ -190,7 +194,9 @@ img{display:block;max-width:100%}
       </div>
       <div class="bb-total" id="bb-total">₹0</div>
     </div>
-    <button class="step-btn" id="step-btn" onclick="handleStepBtn()">Continue to Payment →</button>
+    <!-- Step 1: Continue button -->
+    <button class="step-btn" id="step-btn" onclick="confirmAddress()">Continue to Payment →</button>
+    <!-- Step 2: Place Order button (hidden initially) -->
     <button class="place-btn" id="place-btn" onclick="placeOrder()">🛒 Place Order</button>
   </div>
 
@@ -315,9 +321,10 @@ function selPay(type) {
   });
 }
 
-// ── STEP MACHINE (only 2 steps now) ──────────────────────────────────────────
+// ── STEP MACHINE ─────────────────────────────────────────────────────────────
 function openStep(n) {
   _step = n;
+
   [1, 2].forEach(i => {
     const body = document.getElementById('body' + i);
     const smry = document.getElementById('smry' + i);
@@ -326,89 +333,108 @@ function openStep(n) {
     const dot  = document.getElementById('sd'   + i);
     const sc   = document.getElementById('sc'   + i);
 
+    // সব reset
     body.classList.remove('open');
     smry.style.display = 'none';
     if (chg) chg.style.display = 'none';
     card.classList.remove('locked');
 
     if (i < n) {
-      dot.classList.remove('active'); dot.classList.add('done');
+      // completed step
+      dot.classList.remove('active');
+      dot.classList.add('done');
       sc.textContent = '✓';
       smry.style.display = 'block';
       if (chg) chg.style.display = '';
       const sl = document.getElementById('sl' + i);
       if (sl) sl.classList.add('done');
     } else if (i === n) {
-      dot.classList.remove('done'); dot.classList.add('active');
+      // current step
+      dot.classList.remove('done');
+      dot.classList.add('active');
       sc.textContent = String(i);
       body.classList.add('open');
       const sl = document.getElementById('sl' + i);
       if (sl) sl.classList.remove('done');
     } else {
-      dot.classList.remove('active','done');
+      // future step — lock
+      dot.classList.remove('active', 'done');
       sc.textContent = String(i);
       card.classList.add('locked');
     }
   });
 
+  // Bottom bar button switch
   const stepBtn  = document.getElementById('step-btn');
   const placeBtn = document.getElementById('place-btn');
 
   if (n === 2) {
-    // Step 2: Place Order button দেখাও
+    // Payment step — show Place Order
     stepBtn.style.display  = 'none';
     placeBtn.style.display = 'flex';
+    placeBtn.disabled      = false;
+    placeBtn.innerHTML     = '🛒 Place Order';
   } else {
-    // Step 1: Continue button দেখাও
-    stepBtn.style.display  = '';
+    // Address step — show Continue
+    stepBtn.style.display  = 'block';
     placeBtn.style.display = 'none';
-    stepBtn.textContent    = 'Continue to Payment →';
   }
 
   document.getElementById('card' + n)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function handleStepBtn() {
-  if (_step === 1) confirmAddress();
-}
-
 function confirmAddress() {
-  if (!_selectedAddr) { toast('Please select a delivery address', 'error'); return; }
+  if (!_selectedAddr) {
+    toast('Please select a delivery address', 'error');
+    return;
+  }
   const a = _selectedAddr;
-  const line = [a.full_name || a.name, a.line1, a.line2, a.city, a.state, a.pincode].filter(Boolean).join(', ');
-  document.getElementById('smry1').innerHTML = `<b style="color:var(--green-d)">📍 Delivering to:</b> ${esc(line)}`;
+  const line = [a.full_name || a.name, a.line1, a.line2, a.city, a.state, a.pincode]
+    .filter(Boolean).join(', ');
+  document.getElementById('smry1').innerHTML =
+    `<b style="color:var(--green-d)">📍 Delivering to:</b> ${esc(line)}`;
   openStep(2);
 }
 
 async function placeOrder() {
-  if (!_selectedAddr) { toast('No address selected', 'error'); return; }
+  if (!_selectedAddr) {
+    toast('No address selected', 'error');
+    return;
+  }
 
   const btn = document.getElementById('place-btn');
-  btn.disabled    = true;
-  btn.textContent = 'Placing Order…';
+  btn.disabled   = true;
+  btn.innerHTML  = '⏳ Placing Order…';
 
   try {
+    const addrId = _selectedAddr.id || _selectedAddr._id;
+
     const order = await api('POST', '/orders', {
-      address_id:     _selectedAddr.id || _selectedAddr._id,
+      address_id:     addrId,
       payment_method: _selPay,
     });
 
-    Cart.clear();
+    // Cart clear
+    if (typeof Cart !== 'undefined' && Cart.clear) Cart.clear();
     sessionStorage.removeItem('co_addr_id');
 
-    const orderId = order?.data?.order_id
-      || order?.data?.id
-      || order?.data?._id
-      || order?.order_id
-      || order?.id
-      || order?._id
-      || 'N/A';
+    const orderId =
+      order?.data?.order_id ||
+      order?.data?.id       ||
+      order?.data?._id      ||
+      order?.order_id       ||
+      order?.id             ||
+      order?._id            ||
+      'N/A';
 
-    document.getElementById('success-oid').textContent = `Order ID: ${orderId}`;
+    document.getElementById('success-oid').textContent = 'Order ID: ' + orderId;
     document.getElementById('success-screen').style.display = 'flex';
-  } catch {
-    btn.disabled    = false;
-    btn.textContent = '🛒 Place Order';
+
+  } catch (err) {
+    console.error('Order placement failed:', err);
+    btn.disabled  = false;
+    btn.innerHTML = '🛒 Place Order';
+    toast('Order failed. Please try again.', 'error');
   }
 }
 
