@@ -1,139 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Seller Dashboard — indiaShop</title>
-<link rel="stylesheet" href="static/css/style.css">
-<link rel="stylesheet" href="static/css/nav.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
-.seller-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: var(--radius); padding: 22px; color: #fff; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-.seller-header-left h2 { font-size: 20px; font-weight: 800; }
-.seller-header-left p { font-size: 13px; opacity: 0.8; margin-top: 2px; }
-.seller-nav { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.seller-nav a { display: flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--surface); border-radius: var(--radius); font-size: 13px; font-weight: 600; color: var(--text2); box-shadow: var(--shadow-sm); transition: var(--transition); }
-.seller-nav a:hover, .seller-nav a.active { background: var(--primary); color: #fff; }
-.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
-.stat-card { background: var(--surface); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-sm); }
-.stat-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 6px; }
-.stat-val { font-size: 24px; font-weight: 800; }
-.stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
-.recent-order { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.recent-order:last-child { border-bottom: none; }
-@media(max-width:768px){ .stat-grid{grid-template-columns:1fr 1fr;} }
-@media(max-width:480px){ .stat-grid{grid-template-columns:1fr 1fr;} }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{display:none}*{scrollbar-width:none}
+:root{
+  --green:#1ba345;--green-d:#147a34;--green-l:#e8f8ee;
+  --orange:#ff6600;--red:#e53935;--blue:#1565c0;
+  --yellow:#f9a825;--yellow-l:#fff8e1;
+  --bg:#f1f3f6;--white:#fff;
+  --border:#e0e0e0;--border2:#f0f0f0;
+  --t1:#212121;--t2:#555;--t3:#878787;--t4:#aaa;
+  --header:#1ba345;
+  --r4:4px;--r8:8px;--r12:12px;
+  --shadow:0 1px 4px rgba(0,0,0,.12);
+  --shadow-md:0 2px 10px rgba(0,0,0,.1);
+}
+html,body{font-family:'Mukta',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;font-size:14px}
+a{text-decoration:none;color:inherit}
+button{font-family:'Mukta',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+img{display:block;max-width:100%}
+.page{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:var(--header);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header-top{display:flex;align-items:center;gap:10px;padding:10px 14px}
+.header-title{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;color:#fff;flex:1}
+.header-sub{font-size:11px;color:rgba(255,255,255,.75);font-weight:600}
+.hdr-ico{color:#fff;display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;flex-shrink:0}
+.hdr-ico svg{width:18px;height:18px}
+
+/* SELLER NAV TABS */
+.seller-tabs{background:#fff;border-bottom:1px solid var(--border2);position:sticky;top:52px;z-index:90;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.seller-tabs-scroll{display:flex;overflow-x:auto;padding:0 6px}
+.stab{flex-shrink:0;font-size:12px;font-weight:600;color:var(--t3);padding:10px 12px;border-bottom:2px solid transparent;display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;text-decoration:none}
+.stab.active{color:var(--green);border-bottom-color:var(--green);font-weight:700}
+.stab svg{width:14px;height:14px}
+
+/* BODY */
+.scroll-body{padding:10px 10px 24px}
+
+/* STORE HERO */
+.store-hero{background:linear-gradient(135deg,var(--green),var(--green-d));border-radius:var(--r8);padding:16px;margin-bottom:10px;color:#fff;box-shadow:var(--shadow-md)}
+.store-hero-name{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;margin-bottom:2px}
+.store-hero-sub{font-size:12px;opacity:.8;margin-bottom:12px}
+.store-hero-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.4);color:#fff;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;cursor:pointer;font-family:'Mukta',sans-serif}
+
+/* STAT GRID */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stat-card{background:#fff;border-radius:var(--r8);padding:14px;box-shadow:var(--shadow)}
+.stat-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:4px}
+.stat-val{font-size:22px;font-weight:800;line-height:1}
+.stat-val.green{color:var(--green)}
+.stat-val.orange{color:var(--orange)}
+.stat-sub{font-size:10px;color:var(--t3);margin-top:3px}
+
+/* SECTION CARD */
+.sec-card{background:#fff;border-radius:var(--r8);margin-bottom:10px;box-shadow:var(--shadow);overflow:hidden}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border2)}
+.sec-head-title{font-size:13px;font-weight:700;color:var(--t1)}
+.sec-head-link{font-size:12px;font-weight:600;color:var(--green)}
+
+/* ORDER ROW */
+.order-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border2);cursor:pointer}
+.order-row:last-child{border-bottom:none}
+.order-row:active{background:var(--bg)}
+.order-row-left{flex:1;min-width:0}
+.order-row-id{font-size:12px;font-weight:700;font-family:monospace;color:var(--t1)}
+.order-row-meta{font-size:11px;color:var(--t3);margin-top:2px}
+.order-row-amt{font-size:14px;font-weight:800;color:var(--t1);text-align:right;flex-shrink:0}
+
+/* STATUS BADGE */
+.sbadge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px}
+.sbadge.pending   {background:#fff3e0;color:#e65100}
+.sbadge.confirmed {background:#e3f2fd;color:#1565c0}
+.sbadge.shipped   {background:var(--yellow-l);color:#7b5800}
+.sbadge.delivered {background:var(--green-l);color:var(--green-d)}
+.sbadge.cancelled {background:#fce4ec;color:#c62828}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sbadge.pending   .sdot{background:#e65100}
+.sbadge.confirmed .sdot{background:#1565c0}
+.sbadge.shipped   .sdot{background:var(--yellow)}
+.sbadge.delivered .sdot{background:var(--green)}
+.sbadge.cancelled .sdot{background:var(--red)}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 14px}
+.qa-btn{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:var(--r8);padding:12px;font-size:13px;font-weight:700;color:var(--t1);cursor:pointer;text-decoration:none;border:1.5px solid var(--border2)}
+.qa-btn:active{background:var(--green-l);border-color:var(--green)}
+.qa-ico{font-size:20px}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r4)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.anim{animation:fadeUp .22s ease both}
+
+/* TOAST */
+.toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;z-index:9999;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap}
+.toast-msg.show{opacity:1}
+
+@media(min-width:481px){.page{box-shadow:0 0 40px rgba(0,0,0,.1)}}
 </style>
 </head>
 <body>
-<nav class="navbar"><div class="container"></div></nav>
-<div class="page-content">
-<div class="container">
+<div class="page">
 
-  <div class="seller-header">
-    <div class="seller-header-left">
-      <h2 id="store-name">My Store</h2>
-      <p>Seller Dashboard · <span id="seller-status" class="badge" style="font-size:11px"></span></p>
-    </div>
-    <a href="seller-add-product.html" class="btn" style="background:rgba(255,255,255,0.2);color:#fff;border:1.5px solid rgba(255,255,255,0.4);">+ Add Product</a>
-  </div>
-
-  <div class="seller-nav">
-    <a href="seller-dashboard.html" class="active">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </a>
-    <a href="seller-products.html">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-      Products
-    </a>
-    <a href="seller-orders.html">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
-      Orders
-    </a>
-    <a href="seller-add-product.html">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      Add Product
-    </a>
-    <a href="index.html" style="margin-left:auto">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      View Store
-    </a>
-  </div>
-
-  <div class="stat-grid">
-    <div class="stat-card"><div class="stat-label">Total Revenue</div><div class="stat-val text-success" id="stat-revenue">₹0</div><div class="stat-sub">All time</div></div>
-    <div class="stat-card"><div class="stat-label">Total Orders</div><div class="stat-val" id="stat-orders">0</div><div class="stat-sub">Received</div></div>
-    <div class="stat-card"><div class="stat-label">Products</div><div class="stat-val" id="stat-products">0</div><div class="stat-sub">Listed</div></div>
-    <div class="stat-card"><div class="stat-label">Pending Orders</div><div class="stat-val text-accent" id="stat-pending">0</div><div class="stat-sub">Need attention</div></div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start">
-    <div class="card p-4">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div class="fw-700 fs-15">Recent Orders</div>
-        <a href="seller-orders.html" class="text-primary fs-12 fw-600">View All</a>
+  <header class="header">
+    <div class="header-top">
+      <div style="flex:1">
+        <div class="header-title">Seller Hub</div>
+        <div class="header-sub" id="hdr-store">My Store</div>
       </div>
-      <div id="recent-orders"></div>
+      <a href="index.html" class="hdr-ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      </a>
     </div>
-    <div class="card p-4">
-      <div class="fw-700 fs-15 mb-3">Quick Actions</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <a href="seller-add-product.html" class="btn btn-primary btn-block">+ Add New Product</a>
-        <a href="seller-products.html" class="btn btn-outline btn-block">Manage Products</a>
-        <a href="seller-orders.html" class="btn btn-outline btn-block">View All Orders</a>
-      </div>
-      <div class="fw-600 fs-13 mt-4 mb-2">Top Products</div>
-      <div id="top-products" style="font-size:13px;color:var(--text3)">Loading...</div>
+  </header>
+
+  <div class="seller-tabs">
+    <div class="seller-tabs-scroll">
+      <a class="stab active" href="seller-dashboard.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a class="stab" href="seller-products.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        Products
+      </a>
+      <a class="stab" href="seller-orders.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Orders
+      </a>
+      <a class="stab" href="seller-add-product.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Add Product
+      </a>
     </div>
   </div>
 
+  <div class="scroll-body">
+
+    <!-- Store Hero -->
+    <div class="store-hero anim">
+      <div class="store-hero-name" id="store-name">My Store</div>
+      <div class="store-hero-sub" id="store-sub">indiaShop Seller · Active</div>
+      <button class="store-hero-btn" onclick="location.href='index.html'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        View Store
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid anim" style="animation-delay:.05s">
+      <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-val green" id="stat-revenue">₹0</div>
+        <div class="stat-sub">All time earnings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-val" id="stat-orders">0</div>
+        <div class="stat-sub">Orders received</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Products Listed</div>
+        <div class="stat-val" id="stat-products">0</div>
+        <div class="stat-sub">Active listings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Pending</div>
+        <div class="stat-val orange" id="stat-pending">0</div>
+        <div class="stat-sub">Need action</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="sec-card anim" style="animation-delay:.08s">
+      <div class="sec-head">
+        <div class="sec-head-title">⚡ Quick Actions</div>
+      </div>
+      <div class="qa-grid">
+        <a href="seller-add-product.html" class="qa-btn">
+          <span class="qa-ico">➕</span>
+          <span>Add Product</span>
+        </a>
+        <a href="seller-products.html" class="qa-btn">
+          <span class="qa-ico">📦</span>
+          <span>My Products</span>
+        </a>
+        <a href="seller-orders.html" class="qa-btn">
+          <span class="qa-ico">🛒</span>
+          <span>All Orders</span>
+        </a>
+        <a href="seller-orders.html?status=pending" class="qa-btn">
+          <span class="qa-ico">⏳</span>
+          <span>Pending Orders</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <div class="sec-card anim" style="animation-delay:.10s">
+      <div class="sec-head">
+        <div class="sec-head-title">🕐 Recent Orders</div>
+        <a href="seller-orders.html" class="sec-head-link">View All</a>
+      </div>
+      <div id="recent-orders">
+        <div style="padding:14px">
+          <div class="skeleton" style="height:44px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:44px;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:44px"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
-</div>
-<nav class="bottom-nav"></nav>
+
+<div class="toast-msg" id="toast"></div>
 
 <script src="static/js/main.js"></script>
 <script>
-  if (!Auth.isLoggedIn()) window.location.href = 'login.html';
-  if (!Auth.isSeller()) window.location.href = 'account.html';
-  buildNavbar();
+if (!Auth.isLoggedIn()) window.location.href = 'login.html';
+if (!Auth.isSeller()) window.location.href = 'seller-register.html';
 
-  const user = Auth.user();
-  document.getElementById('store-name').textContent = user?.name + "'s Store";
+const user = Auth.user();
+document.getElementById('hdr-store').textContent = (user?.name || 'Seller') + "'s Store";
+document.getElementById('store-name').textContent = (user?.name || 'Seller') + "'s Store";
 
-  async function loadDashboard() {
-    try {
-      const res = await api('GET', '/seller/dashboard');
-      const data = res.data || {};
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
 
-      document.getElementById('stat-revenue').textContent = formatPrice(data.total_revenue || 0);
-      document.getElementById('stat-orders').textContent = data.total_orders || 0;
-      document.getElementById('stat-products').textContent = data.total_products || 0;
-      document.getElementById('stat-pending').textContent = data.pending_orders || 0;
+const STATUS_LABEL = {pending:'Pending',confirmed:'Confirmed',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'};
 
-      const statusLabel = { shipped: 'Shipped', delivered: 'Delivered', cancelled: 'Cancelled', pending: 'Pending', confirmed: 'Confirmed' };
-      const statusClass = { shipped: 'warning', delivered: 'success', cancelled: 'danger', pending: 'gray', confirmed: 'primary' };
+async function loadDashboard() {
+  try {
+    const res  = await api('GET', '/seller/dashboard');
+    const data = res?.data ?? res;
 
-      const orders = data.recent_orders || [];
-      document.getElementById('recent-orders').innerHTML = orders.length ? orders.map(o => `
-        <div class="recent-order">
-          <div style="flex:1">
-            <div style="font-size:13px;font-weight:600">#${o.id.slice(-8).toUpperCase()} · ${o.buyer_name || 'Customer'}</div>
-            <div style="font-size:12px;color:var(--text3)">${new Date(o.created_at).toLocaleDateString('en-IN')} · ${formatPrice(o.total_amount)}</div>
-          </div>
-          <span class="badge badge-${statusClass[o.status]||'gray'}">${statusLabel[o.status]||o.status}</span>
-        </div>`).join('') : '<p class="text-muted fs-13">No orders yet.</p>';
+    document.getElementById('stat-revenue').textContent  = formatPrice(data.total_revenue  || 0);
+    document.getElementById('stat-orders').textContent   = data.total_orders   || 0;
+    document.getElementById('stat-products').textContent = data.total_products || 0;
+    document.getElementById('stat-pending').textContent  = data.pending_orders || 0;
 
-      const prods = data.top_products || [];
-      document.getElementById('top-products').innerHTML = prods.length ? prods.slice(0,3).map(p => `<div style="padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>${(p.name||'').slice(0,28)}...</span><span class="fw-600">${p.total_sold||0} sold</span></div>`).join('') : 'No products yet.';
+    document.getElementById('store-sub').textContent =
+      'indiaShop Seller · ' + ((data.status === 'approved' || data.status === 'active') ? 'Active ✓' : data.status || 'Active');
 
-      const statusEl = document.getElementById('seller-status');
-      statusEl.textContent = 'Active';
-      statusEl.className = 'badge badge-success';
-    } catch(e) {
-      toast(e.message, 'error');
+    // recent orders
+    const orders = data.recent_orders || [];
+    const ordEl  = document.getElementById('recent-orders');
+
+    // fallback: load from orders API
+    if (!orders.length) {
+      try {
+        const oRes   = await api('GET', '/seller/orders?page=1&limit=5');
+        const oData  = oRes?.data ?? oRes;
+        const oList  = oData?.orders || [];
+        renderRecentOrders(oList, ordEl);
+      } catch { ordEl.innerHTML = '<p style="padding:14px;font-size:13px;color:var(--t3)">No orders yet.</p>'; }
+    } else {
+      renderRecentOrders(orders, ordEl);
     }
+  } catch(e) {
+    showToast('Failed to load dashboard');
   }
+}
 
-  loadDashboard();
+function renderRecentOrders(orders, el) {
+  if (!orders.length) {
+    el.innerHTML = '<p style="padding:14px;font-size:13px;color:var(--t3)">No orders yet.</p>';
+    return;
+  }
+  el.innerHTML = orders.slice(0, 5).map(o => {
+    const status = (o.status || 'pending').toLowerCase();
+    const date   = o.created_at ? new Date(o.created_at).toLocaleDateString('en-IN',{day:'numeric',month:'short'}) : '';
+    return `
+      <div class="order-row" onclick="location.href='seller-orders.html'">
+        <div class="order-row-left">
+          <div class="order-row-id">#${String(o.id||'').slice(-8).toUpperCase()}</div>
+          <div class="order-row-meta">${date} · ${(o.items||[]).length} item(s)</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="order-row-amt">${formatPrice(o.total_amount||0)}</div>
+          <span class="sbadge ${status}"><span class="sdot"></span>${STATUS_LABEL[status]||status}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+loadDashboard();
 </script>
 </body>
 </html>
