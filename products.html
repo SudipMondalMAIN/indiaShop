@@ -1,216 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Products — indiaShop</title>
-<link rel="stylesheet" href="static/css/style.css">
-<link rel="stylesheet" href="static/css/nav.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
 <style>
-.products-layout { display: flex; gap: 16px; align-items: flex-start; }
-.filter-sidebar {
-  width: 220px; flex-shrink: 0; background: var(--surface);
-  border-radius: var(--radius); box-shadow: var(--shadow-sm);
-  position: sticky; top: 70px; overflow: hidden;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{display:none}*{scrollbar-width:none}
+:root{
+  --green:#1ba345;--green-d:#147a34;--green-l:#e8f8ee;
+  --orange:#ff6600;--red:#e53935;--blue:#1565c0;
+  --bg:#f1f3f6;
+  --border:#e0e0e0;--border2:#f0f0f0;
+  --t1:#212121;--t2:#555;--t3:#878787;--t4:#aaa;
+  --header:#1ba345;
+  --r4:4px;--r8:8px;
+  --shadow:0 1px 4px rgba(0,0,0,.12);
 }
-.filter-header { padding: 14px 16px; font-size: 15px; font-weight: 700; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.filter-clear { font-size: 12px; color: var(--primary); font-weight: 600; background: none; border: none; cursor: pointer; }
-.filter-section { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-.filter-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); margin-bottom: 10px; }
-.filter-option { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; font-size: 13px; }
-.filter-option input[type=checkbox] { accent-color: var(--primary); width: 14px; height: 14px; }
-.price-range { display: flex; gap: 8px; align-items: center; }
-.price-range input { width: 80px; padding: 6px 10px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; outline: none; }
-.price-range input:focus { border-color: var(--primary); }
+html,body{font-family:'Mukta',sans-serif;background:var(--bg);color:var(--t1);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;font-size:14px}
+a{text-decoration:none;color:inherit}
+button{font-family:'Mukta',sans-serif;cursor:pointer;border:none;outline:none;background:none}
+img{display:block;max-width:100%}
+.page{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh}
 
-.products-main { flex: 1; min-width: 0; }
-.products-toolbar { background: var(--surface); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow-sm); flex-wrap: wrap; gap: 10px; }
-.toolbar-left { font-size: 13px; color: var(--text3); }
-.toolbar-left span { color: var(--text); font-weight: 600; }
-.sort-select { padding: 6px 12px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 13px; color: var(--text); outline: none; cursor: pointer; }
+/* ── HEADER ── */
+.header{position:sticky;top:0;z-index:200;background:var(--header);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.header-top{display:flex;align-items:center;gap:8px;padding:10px 14px}
+.back-btn{color:#fff;display:flex;align-items:center;cursor:pointer;flex-shrink:0}
+.back-btn svg{width:22px;height:22px}
+.search-bar{flex:1;display:flex;align-items:center;background:rgba(255,255,255,.18);border-radius:var(--r8);padding:7px 12px;gap:8px;border:1px solid rgba(255,255,255,.25)}
+.search-bar svg{width:16px;height:16px;color:rgba(255,255,255,.8);flex-shrink:0}
+.search-bar input{background:none;border:none;outline:none;font-family:'Mukta',sans-serif;font-size:14px;color:#fff;width:100%;font-weight:500}
+.search-bar input::placeholder{color:rgba(255,255,255,.65)}
+.filter-btn{color:#fff;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);border-radius:var(--r4);padding:6px 10px;flex-shrink:0;position:relative}
+.filter-btn svg{width:15px;height:15px}
+.filter-dot{position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--orange);display:none}
+.filter-dot.show{display:block}
 
-.product-card { cursor: pointer; transition: var(--transition); overflow: hidden; }
-.product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-.product-img-wrap { position: relative; background: var(--bg); aspect-ratio: 1; overflow: hidden; }
-.product-img-wrap img { width: 100%; height: 100%; object-fit: contain; padding: 10px; transition: transform 0.3s ease; }
-.product-card:hover .product-img-wrap img { transform: scale(1.04); }
-.product-disc-badge { position: absolute; top: 8px; left: 8px; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
-.product-info { padding: 10px 12px 12px; }
-.product-name { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
-.product-brand { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
-.product-price-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+/* ── SORT BAR ── */
+.sort-bar{background:#fff;border-bottom:1px solid var(--border2);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:52px;z-index:190;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.result-count{font-size:12px;color:var(--t3);font-weight:600}
+.result-count span{color:var(--t1);font-weight:700}
+.sort-wrap{display:flex;align-items:center;gap:6px}
+.sort-lbl{font-size:12px;color:var(--t3);font-weight:600;white-space:nowrap}
+.sort-select{font-family:'Mukta',sans-serif;font-size:12px;font-weight:700;color:var(--green);background:var(--green-l);border:none;border-radius:99px;padding:4px 10px;cursor:pointer;outline:none}
 
-.filter-toggle-btn { display: none; }
-.filter-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 400; }
-.filter-overlay.show { display: block; }
+/* ── SCROLL BODY ── */
+.scroll-body{padding:10px 10px 24px}
 
-@media (max-width: 768px) {
-  .filter-sidebar { position: fixed; left: -240px; top: 0; bottom: 0; z-index: 500; border-radius: 0; width: 260px; overflow-y: auto; transition: left 0.25s ease; }
-  .filter-sidebar.show { left: 0; }
-  .filter-toggle-btn { display: inline-flex; }
-  .products-layout { display: block; }
-}
+/* ── PRODUCT GRID ── */
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ── PRODUCT CARD ── */
+.product-card{background:#fff;border-radius:var(--r8);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s;animation:fadeUp .2s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.product-card:active{transform:scale(.97)}
+.product-img-wrap{position:relative;background:var(--bg);aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.product-img-wrap img{width:85%;height:85%;object-fit:contain;transition:transform .3s}
+.product-card:active .product-img-wrap img{transform:scale(1.04)}
+.disc-badge{position:absolute;top:7px;left:7px;background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px}
+.wishlist-btn{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.wishlist-btn svg{width:14px;height:14px;stroke:var(--t3);fill:none;transition:.15s}
+.wishlist-btn.liked svg{stroke:var(--red);fill:var(--red)}
+.product-info{padding:8px 10px 10px}
+.product-brand{font-size:10px;color:var(--t3);font-weight:600;margin-bottom:2px;text-transform:uppercase;letter-spacing:.3px}
+.product-name{font-size:12px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:var(--t1);margin-bottom:5px}
+.product-price-row{display:flex;align-items:baseline;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+.product-price{font-size:15px;font-weight:800;color:var(--t1)}
+.product-mrp{font-size:11px;color:var(--t4);text-decoration:line-through}
+.product-off{font-size:10px;font-weight:700;color:var(--green)}
+.product-rating{display:flex;align-items:center;gap:4px}
+.rating-pill{background:#388e3c;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;display:flex;align-items:center;gap:2px}
+.rating-count{font-size:10px;color:var(--t4)}
+.btn-add{width:100%;margin-top:7px;background:var(--green-l);color:var(--green-d);font-size:12px;font-weight:700;padding:7px;border-radius:var(--r4);border:none;cursor:pointer;font-family:'Mukta',sans-serif;transition:background .15s}
+.btn-add:active{background:var(--green);color:#fff}
+
+/* ── SKELETON ── */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--r4)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{background:#fff;border-radius:var(--r8);overflow:hidden;box-shadow:var(--shadow)}
+
+/* ── EMPTY ── */
+.empty-wrap{grid-column:1/-1;display:flex;flex-direction:column;align-items:center;padding:50px 20px;text-align:center}
+.empty-ico{font-size:56px;margin-bottom:14px}
+.empty-t{font-family:'Baloo 2',cursive;font-size:18px;font-weight:800;margin-bottom:6px}
+.empty-s{font-size:13px;color:var(--t3);margin-bottom:20px}
+.btn-green{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:10px 22px;border-radius:var(--r4);border:none;font-family:'Mukta',sans-serif}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;flex-wrap:wrap}
+.page-btn{width:34px;height:34px;border-radius:var(--r4);border:1.5px solid var(--border);background:#fff;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.page-btn.active{background:var(--green);color:#fff;border-color:var(--green)}
+.page-btn:active{opacity:.8}
+
+/* ── FILTER DRAWER ── */
+.filter-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:none;opacity:0;transition:opacity .25s}
+.filter-overlay.show{display:block;opacity:1}
+.filter-drawer{position:fixed;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:480px;background:#fff;border-radius:16px 16px 0 0;z-index:600;transition:transform .28s cubic-bezier(.4,0,.2,1);padding-bottom:env(safe-area-inset-bottom,0px);max-height:88vh;overflow-y:auto}
+.filter-drawer.show{transform:translateX(-50%) translateY(0)}
+.drawer-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:12px auto 0}
+.drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 10px;border-bottom:1px solid var(--border2)}
+.drawer-title{font-family:'Baloo 2',cursive;font-size:17px;font-weight:800}
+.drawer-clear{font-size:12px;font-weight:700;color:var(--blue);background:#e3f2fd;padding:5px 12px;border-radius:99px}
+.filter-sec{padding:14px 16px;border-bottom:1px solid var(--border2)}
+.filter-sec:last-of-type{border-bottom:none}
+.filter-sec-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);margin-bottom:10px}
+.filter-chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:6px 13px;border-radius:99px;border:1.5px solid var(--border);font-size:12px;font-weight:600;color:var(--t2);cursor:pointer;transition:.15s;background:#fff}
+.chip.sel{background:var(--green-l);border-color:var(--green);color:var(--green-d)}
+.price-row{display:flex;align-items:center;gap:10px}
+.price-input{flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r4);font-family:'Mukta',sans-serif;font-size:14px;color:var(--t1);outline:none;transition:.15s}
+.price-input:focus{border-color:var(--green)}
+.price-sep{color:var(--t4);font-weight:700}
+.drawer-footer{padding:14px 16px;border-top:1px solid var(--border2);background:#fff;display:flex;gap:10px}
+.btn-apply{flex:1;background:var(--green);color:#fff;font-family:'Baloo 2',cursive;font-size:15px;font-weight:800;padding:12px;border-radius:var(--r4);border:none;cursor:pointer;box-shadow:0 2px 8px rgba(27,163,69,.3)}
+.btn-apply:active{opacity:.85}
+
+/* ── TOAST ── */
+.toast-msg{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#333;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:99px;z-index:9999;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap}
+.toast-msg.show{opacity:1}
+
+@media(min-width:481px){.page,.filter-drawer{box-shadow:0 0 40px rgba(0,0,0,.1)}}
 </style>
 </head>
 <body>
-<nav class="navbar"><div class="container"></div></nav>
+<div class="page">
 
-<div class="page-content">
-<div class="container">
-
-  <div id="filter-overlay" class="filter-overlay" onclick="closeFilter()"></div>
-
-  <div class="products-layout">
-    <!-- Sidebar -->
-    <div class="filter-sidebar" id="filter-sidebar">
-      <div class="filter-header">
-        Filters
-        <button class="filter-clear" onclick="clearFilters()">Clear All</button>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <button class="back-btn" onclick="history.back()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Search products…" autocomplete="off">
       </div>
-
-      <div class="filter-section">
-        <div class="filter-section-title">Category</div>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Electronics"> Electronics</label>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Fashion"> Fashion</label>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Home"> Home</label>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Beauty"> Beauty</label>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Books"> Books</label>
-        <label class="filter-option"><input type="checkbox" name="cat" value="Sports"> Sports</label>
-      </div>
-
-      <div class="filter-section">
-        <div class="filter-section-title">Price Range</div>
-        <div class="price-range">
-          <input type="number" id="min-price" placeholder="Min" min="0">
-          <span style="color:var(--text3)">–</span>
-          <input type="number" id="max-price" placeholder="Max" min="0">
-        </div>
-        <button class="btn btn-primary btn-sm w-100 mt-3" onclick="applyFilters()">Apply</button>
-      </div>
-
-      <div class="filter-section">
-        <div class="filter-section-title">Rating</div>
-        <label class="filter-option"><input type="radio" name="rating" value="4"> 4★ & above</label>
-        <label class="filter-option"><input type="radio" name="rating" value="3"> 3★ & above</label>
-        <label class="filter-option"><input type="radio" name="rating" value="0" checked> All</label>
-      </div>
-
-      <div class="filter-section" style="border-bottom:none">
-        <div class="filter-section-title">Discount</div>
-        <label class="filter-option"><input type="radio" name="disc" value="50"> 50% or more</label>
-        <label class="filter-option"><input type="radio" name="disc" value="30"> 30% or more</label>
-        <label class="filter-option"><input type="radio" name="disc" value="0" checked> All</label>
-      </div>
+      <button class="filter-btn" onclick="openFilter()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        Filter
+        <span class="filter-dot" id="filter-dot"></span>
+      </button>
     </div>
+  </header>
 
-    <!-- Main -->
-    <div class="products-main">
-      <div class="products-toolbar">
-        <div class="toolbar-left">
-          <button class="btn btn-outline btn-sm filter-toggle-btn" onclick="openFilter()" style="margin-right:8px">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
-            Filters
-          </button>
-          Showing <span id="result-count">—</span> results <span id="search-label"></span>
-        </div>
-        <select class="sort-select" id="sort-select" onchange="applyFilters()">
-          <option value="">Relevance</option>
-          <option value="price_asc">Price: Low to High</option>
-          <option value="price_desc">Price: High to Low</option>
-          <option value="rating">Top Rated</option>
-          <option value="newest">Newest</option>
-        </select>
-      </div>
-
-      <div class="grid-4" id="products-grid"></div>
-      <div class="pagination" id="pagination"></div>
+  <!-- SORT BAR -->
+  <div class="sort-bar">
+    <div class="result-count">Showing <span id="result-count">—</span> results</div>
+    <div class="sort-wrap">
+      <span class="sort-lbl">Sort:</span>
+      <select class="sort-select" id="sort-select" onchange="applyFilters()">
+        <option value="newest">Newest</option>
+        <option value="price_asc">Low to High</option>
+        <option value="price_desc">High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
     </div>
   </div>
 
-</div>
+  <!-- BODY -->
+  <div class="scroll-body">
+    <div class="product-grid" id="products-grid">
+      <!-- skeleton -->
+      ${Array(6).fill('').map((_,i) => `
+        <div class="skel-card" style="animation-delay:${i*.05}s">
+          <div class="skeleton" style="aspect-ratio:1;width:100%"></div>
+          <div style="padding:10px">
+            <div class="skeleton" style="height:12px;width:60%;margin-bottom:8px"></div>
+            <div class="skeleton" style="height:13px;width:90%;margin-bottom:6px"></div>
+            <div class="skeleton" style="height:13px;width:70%;margin-bottom:8px"></div>
+            <div class="skeleton" style="height:15px;width:45%"></div>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
 </div>
 
-<nav class="bottom-nav"></nav>
+<!-- FILTER OVERLAY -->
+<div class="filter-overlay" id="filter-overlay" onclick="closeFilter()"></div>
+
+<!-- FILTER DRAWER -->
+<div class="filter-drawer" id="filter-drawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-head">
+    <div class="drawer-title">Filters</div>
+    <button class="drawer-clear" onclick="clearFilters()">Clear All</button>
+  </div>
+
+  <!-- Category -->
+  <div class="filter-sec">
+    <div class="filter-sec-title">Category</div>
+    <div class="filter-chips" id="cat-chips"></div>
+  </div>
+
+  <!-- Price -->
+  <div class="filter-sec">
+    <div class="filter-sec-title">Price Range (₹)</div>
+    <div class="price-row">
+      <input class="price-input" type="number" id="min-price" placeholder="Min" min="0">
+      <span class="price-sep">—</span>
+      <input class="price-input" type="number" id="max-price" placeholder="Max" min="0">
+    </div>
+  </div>
+
+  <!-- Rating -->
+  <div class="filter-sec">
+    <div class="filter-sec-title">Minimum Rating</div>
+    <div class="filter-chips" id="rating-chips">
+      <div class="chip" data-rating="4" onclick="selRating(this)">⭐ 4 & above</div>
+      <div class="chip" data-rating="3" onclick="selRating(this)">⭐ 3 & above</div>
+      <div class="chip sel" data-rating="0" onclick="selRating(this)">All</div>
+    </div>
+  </div>
+
+  <!-- Discount -->
+  <div class="filter-sec">
+    <div class="filter-sec-title">Discount</div>
+    <div class="filter-chips" id="disc-chips">
+      <div class="chip" data-disc="50" onclick="selDisc(this)">50%+ off</div>
+      <div class="chip" data-disc="30" onclick="selDisc(this)">30%+ off</div>
+      <div class="chip" data-disc="10" onclick="selDisc(this)">10%+ off</div>
+      <div class="chip sel" data-disc="0" onclick="selDisc(this)">All</div>
+    </div>
+  </div>
+
+  <div class="drawer-footer">
+    <button class="btn-apply" onclick="applyFiltersAndClose()">Apply Filters</button>
+  </div>
+</div>
+
+<div class="toast-msg" id="toast"></div>
 
 <script src="static/js/main.js"></script>
 <script>
-  buildNavbar();
-  skeletonCards(8, document.getElementById('products-grid'));
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmt = n => (typeof formatPrice === 'function') ? formatPrice(n) : '₹' + Number(n).toLocaleString('en-IN');
 
-  const params = new URLSearchParams(window.location.search);
-  const searchQ = params.get('q') || '';
-  if (searchQ) document.getElementById('search-label').textContent = `for "${searchQ}"`;
+// ── STATE ────────────────────────────────────────────────────────────────────
+const urlParams   = new URLSearchParams(window.location.search);
+let _searchQ      = urlParams.get('q') || urlParams.get('search') || '';
+let _catParam     = urlParams.get('category') || '';
+let _selCats      = _catParam ? [_catParam] : [];
+let _selRating    = '0';
+let _selDisc      = '0';
+let _currentPage  = 1;
+let _categories   = [];
 
-  // Pre-select category from URL
-  const catParam = params.get('category');
-  if (catParam) {
-    document.querySelectorAll('input[name=cat]').forEach(cb => { if (cb.value === catParam) cb.checked = true; });
+// pre-fill search
+if (_searchQ) document.getElementById('search-input').value = _searchQ;
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── CATEGORIES ───────────────────────────────────────────────────────────────
+async function loadCategories() {
+  try {
+    const res = await api('GET', '/categories');
+    _categories = Array.isArray(res) ? res : (res?.data ?? res?.categories ?? []);
+    renderCatChips();
+  } catch {
+    // fallback hardcoded
+    _categories = [
+      {name:'Electronics',slug:'electronics'},
+      {name:'Fashion',slug:'fashion'},
+      {name:'Home',slug:'home'},
+      {name:'Beauty',slug:'beauty'},
+      {name:'Sports',slug:'sports'},
+      {name:'Books',slug:'books'},
+      {name:'Toys',slug:'toys'},
+      {name:'Appliances',slug:'appliances'},
+    ];
+    renderCatChips();
   }
+}
 
-  let currentPage = 1;
+function renderCatChips() {
+  const wrap = document.getElementById('cat-chips');
+  wrap.innerHTML = _categories.map(c => {
+    const slug = c.slug || c.name?.toLowerCase() || '';
+    const name = c.name || '';
+    const emoji = c.emoji || c.icon || '';
+    const isSel = _selCats.includes(slug) || _selCats.includes(name);
+    return `<div class="chip${isSel ? ' sel' : ''}" data-slug="${esc(slug)}" data-name="${esc(name)}" onclick="toggleCat(this)">${emoji} ${esc(name)}</div>`;
+  }).join('');
+}
 
-  async function applyFilters(pg = 1) {
-    currentPage = pg;
-    skeletonCards(8, document.getElementById('products-grid'));
+function toggleCat(el) {
+  const slug = el.dataset.slug;
+  const idx  = _selCats.indexOf(slug);
+  if (idx > -1) { _selCats.splice(idx,1); el.classList.remove('sel'); }
+  else           { _selCats.push(slug);   el.classList.add('sel'); }
+  updateFilterDot();
+}
 
-    const cats = [...document.querySelectorAll('input[name=cat]:checked')].map(i => i.value);
-    const minP = document.getElementById('min-price').value;
-    const maxP = document.getElementById('max-price').value;
-    const rating = document.querySelector('input[name=rating]:checked')?.value;
-    const disc = document.querySelector('input[name=disc]:checked')?.value;
-    const sort = document.getElementById('sort-select').value;
+function selRating(el) {
+  _selRating = el.dataset.rating;
+  document.querySelectorAll('#rating-chips .chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
 
-    const qp = new URLSearchParams({ page: pg, limit: 12 });
-    if (searchQ) qp.set('q', searchQ);
-    if (cats.length) qp.set('category', cats.join(','));
-    if (minP) qp.set('min_price', minP);
-    if (maxP) qp.set('max_price', maxP);
-    if (rating && rating !== '0') qp.set('min_rating', rating);
-    if (disc && disc !== '0') qp.set('min_discount', disc);
-    if (sort) qp.set('sort', sort);
+function selDisc(el) {
+  _selDisc = el.dataset.disc;
+  document.querySelectorAll('#disc-chips .chip').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
 
-    try {
-      const data = await api('GET', `/products?${qp}`);
-      const grid = document.getElementById('products-grid');
-      grid.innerHTML = '';
-      (data.products || []).forEach(p => grid.insertAdjacentHTML('beforeend', productCard(p)));
-      document.getElementById('result-count').textContent = data.total || 0;
-      buildPagination(data.total, 12, pg);
-      if (!data.products?.length) grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>No products found</p><a href="products.html" class="btn btn-outline">Clear Filters</a></div>`;
-    } catch {
-      document.getElementById('products-grid').innerHTML = '<p class="text-muted p-4">Failed to load products.</p>';
-    }
-  }
+function updateFilterDot() {
+  const active = _selCats.length > 0 || _selRating !== '0' || _selDisc !== '0'
+    || document.getElementById('min-price').value
+    || document.getElementById('max-price').value;
+  document.getElementById('filter-dot').classList.toggle('show', active);
+}
 
-  function buildPagination(total, limit, current) {
-    const pages = Math.ceil(total / limit);
-    const el = document.getElementById('pagination');
-    if (pages <= 1) { el.innerHTML = ''; return; }
-    let html = '';
-    for (let i = 1; i <= Math.min(pages, 7); i++) {
-      html += `<button class="page-btn${i === current ? ' active' : ''}" onclick="applyFilters(${i})">${i}</button>`;
-    }
-    el.innerHTML = html;
-  }
-
-  function clearFilters() {
-    document.querySelectorAll('input[name=cat]').forEach(cb => cb.checked = false);
-    document.getElementById('min-price').value = '';
-    document.getElementById('max-price').value = '';
-    document.querySelector('input[name=rating][value="0"]').checked = true;
-    document.querySelector('input[name=disc][value="0"]').checked = true;
-    applyFilters();
-  }
-
-  function openFilter() {
-    document.getElementById('filter-sidebar').classList.add('show');
-    document.getElementById('filter-overlay').classList.add('show');
-  }
-  function closeFilter() {
-    document.getElementById('filter-sidebar').classList.remove('show');
-    document.getElementById('filter-overlay').classList.remove('show');
-  }
-
+// ── FILTER DRAWER ─────────────────────────────────────────────────────────────
+function openFilter() {
+  document.getElementById('filter-drawer').classList.add('show');
+  document.getElementById('filter-overlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeFilter() {
+  document.getElementById('filter-drawer').classList.remove('show');
+  document.getElementById('filter-overlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+function applyFiltersAndClose() {
+  closeFilter();
+  updateFilterDot();
   applyFilters();
+}
+function clearFilters() {
+  _selCats   = [];
+  _selRating = '0';
+  _selDisc   = '0';
+  document.getElementById('min-price').value = '';
+  document.getElementById('max-price').value = '';
+  renderCatChips();
+  document.querySelectorAll('#rating-chips .chip').forEach(c => c.classList.toggle('sel', c.dataset.rating === '0'));
+  document.querySelectorAll('#disc-chips .chip').forEach(c => c.classList.toggle('sel', c.dataset.disc === '0'));
+  updateFilterDot();
+}
+
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+let _searchTimer;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(_searchTimer);
+  _searchQ = e.target.value.trim();
+  _searchTimer = setTimeout(() => applyFilters(), 500);
+});
+
+// ── RENDER SKELETONS ──────────────────────────────────────────────────────────
+function renderSkeletons() {
+  document.getElementById('products-grid').innerHTML = Array(6).fill('').map((_,i) => `
+    <div class="skel-card" style="animation-delay:${i*.05}s">
+      <div class="skeleton" style="aspect-ratio:1;width:100%"></div>
+      <div style="padding:10px">
+        <div class="skeleton" style="height:11px;width:55%;margin-bottom:8px"></div>
+        <div class="skeleton" style="height:13px;width:90%;margin-bottom:5px"></div>
+        <div class="skeleton" style="height:12px;width:70%;margin-bottom:8px"></div>
+        <div class="skeleton" style="height:16px;width:45%"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ── PRODUCT CARD HTML ─────────────────────────────────────────────────────────
+function buildCard(p, idx) {
+  const slug     = p.slug || '';
+  const name     = p.name || '';
+  const brand    = p.brand || p.category?.name || '';
+  const price    = p.discounted_price ?? p.price ?? 0;
+  const origPrice= p.price ?? p.original_price ?? price;
+  const disc     = p.discount_pct ?? (origPrice > price ? Math.round((origPrice - price) / origPrice * 100) : 0);
+  const rating   = p.avg_rating ?? p.rating ?? 0;
+  const ratingCt = p.review_count ?? p.rating_count ?? 0;
+  const img      = p.primary_image || (p.images?.[0]?.url) || '';
+  const hasDisc  = disc > 0 && origPrice > price + 0.5;
+
+  return `
+    <div class="product-card" onclick="location.href='product-detail.html?slug=${esc(slug)}'" style="animation-delay:${idx * 0.04}s">
+      <div class="product-img-wrap">
+        <img src="${esc(img || 'https://placehold.co/300x300/f1f3f6/878787?text=?')}"
+             alt="${esc(name)}"
+             onerror="this.src='https://placehold.co/300x300/f1f3f6/878787?text=?'"
+             loading="lazy">
+        ${hasDisc ? `<div class="disc-badge">${disc}% off</div>` : ''}
+        <div class="wishlist-btn" id="wb-${esc(slug)}" onclick="toggleWish('${esc(slug)}',event)">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+      </div>
+      <div class="product-info">
+        ${brand ? `<div class="product-brand">${esc(brand)}</div>` : ''}
+        <div class="product-name">${esc(name)}</div>
+        <div class="product-price-row">
+          <span class="product-price">${fmt(price)}</span>
+          ${hasDisc ? `<span class="product-mrp">${fmt(origPrice)}</span>` : ''}
+        </div>
+        ${rating > 0 ? `
+        <div class="product-rating">
+          <div class="rating-pill">★ ${Number(rating).toFixed(1)}</div>
+          ${ratingCt > 0 ? `<span class="rating-count">(${ratingCt})</span>` : ''}
+        </div>` : ''}
+        <button class="btn-add" onclick="addToCart('${esc(p.id || p._id || '')}',event)">+ Add to Cart</button>
+      </div>
+    </div>`;
+}
+
+// ── WISHLIST ──────────────────────────────────────────────────────────────────
+const _wished = new Set(JSON.parse(localStorage.getItem('is_wishlist') || '[]'));
+function toggleWish(slug, e) {
+  e.stopPropagation();
+  const btn = document.getElementById('wb-' + slug);
+  if (_wished.has(slug)) { _wished.delete(slug); btn?.classList.remove('liked'); showToast('Removed from wishlist'); }
+  else                   { _wished.add(slug);    btn?.classList.add('liked');    showToast('Added to wishlist ❤️'); }
+  localStorage.setItem('is_wishlist', JSON.stringify([..._wished]));
+}
+
+// ── ADD TO CART ───────────────────────────────────────────────────────────────
+async function addToCart(pid, e) {
+  e.stopPropagation();
+  if (!pid) return;
+  if (typeof Auth !== 'undefined' && !Auth.isLoggedIn()) {
+    window.location.href = 'login.html?next=products.html';
+    return;
+  }
+  try {
+    await api('POST', '/cart', { product_id: pid, quantity: 1 });
+    showToast('Added to cart 🛒');
+    if (typeof Cart !== 'undefined' && Cart.refresh) Cart.refresh();
+  } catch {
+    showToast('Could not add to cart');
+  }
+}
+
+// ── LOAD PRODUCTS ─────────────────────────────────────────────────────────────
+async function applyFilters(pg = 1) {
+  _currentPage = pg;
+  renderSkeletons();
+
+  const qp = new URLSearchParams({ page: pg, limit: 12 });
+  if (_searchQ) qp.set('search', _searchQ);
+  if (_selCats.length === 1) qp.set('category', _selCats[0]);
+  if (document.getElementById('min-price').value) qp.set('min_price', document.getElementById('min-price').value);
+  if (document.getElementById('max-price').value) qp.set('max_price', document.getElementById('max-price').value);
+  if (_selRating !== '0') qp.set('min_rating', _selRating);
+  if (_selDisc   !== '0') qp.set('min_discount', _selDisc);
+  const sort = document.getElementById('sort-select').value;
+  if (sort) qp.set('sort', sort);
+
+  try {
+    const res      = await api('GET', `/products?${qp}`);
+    const products = res?.products ?? res?.data?.products ?? (Array.isArray(res) ? res : []);
+    const total    = res?.total ?? res?.data?.total ?? products.length;
+
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = '';
+
+    document.getElementById('result-count').textContent = total;
+
+    if (!products.length) {
+      grid.innerHTML = `
+        <div class="empty-wrap">
+          <div class="empty-ico">🔍</div>
+          <div class="empty-t">No Products Found</div>
+          <div class="empty-s">Try different filters or search term</div>
+          <button class="btn-green" onclick="clearFilters();applyFilters()">Clear Filters</button>
+        </div>`;
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    products.forEach((p, i) => grid.insertAdjacentHTML('beforeend', buildCard(p, i)));
+
+    // mark wishlisted items
+    _wished.forEach(slug => {
+      const btn = document.getElementById('wb-' + slug);
+      if (btn) btn.classList.add('liked');
+    });
+
+    buildPagination(total, 12, pg);
+  } catch (err) {
+    console.error('Products load failed:', err);
+    document.getElementById('products-grid').innerHTML =
+      `<div class="empty-wrap"><div class="empty-ico">⚠️</div><div class="empty-t">Failed to Load</div><div class="empty-s">Please check your connection and try again.</div></div>`;
+  }
+}
+
+// ── PAGINATION ────────────────────────────────────────────────────────────────
+function buildPagination(total, limit, current) {
+  const pages = Math.ceil(total / limit);
+  const el    = document.getElementById('pagination');
+  if (pages <= 1) { el.innerHTML = ''; return; }
+
+  let html = '';
+  // prev
+  if (current > 1) html += `<button class="page-btn" onclick="applyFilters(${current-1})">‹</button>`;
+  // pages
+  const start = Math.max(1, current - 2);
+  const end   = Math.min(pages, current + 2);
+  if (start > 1) html += `<button class="page-btn" onclick="applyFilters(1)">1</button>${start > 2 ? '<span style="padding:0 4px;color:var(--t4)">…</span>' : ''}`;
+  for (let i = start; i <= end; i++) {
+    html += `<button class="page-btn${i === current ? ' active' : ''}" onclick="applyFilters(${i})">${i}</button>`;
+  }
+  if (end < pages) html += `${end < pages - 1 ? '<span style="padding:0 4px;color:var(--t4)">…</span>' : ''}<button class="page-btn" onclick="applyFilters(${pages})">${pages}</button>`;
+  // next
+  if (current < pages) html += `<button class="page-btn" onclick="applyFilters(${current+1})">›</button>`;
+
+  el.innerHTML = html;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadCategories();
+applyFilters();
 </script>
 </body>
 </html>
