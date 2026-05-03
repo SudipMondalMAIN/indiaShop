@@ -28,9 +28,9 @@ img{display:block;max-width:100%;object-fit:cover}
 .hbtn{display:flex;flex-direction:column;align-items:center;gap:1px;color:#fff;font-size:10px;font-weight:600;position:relative;padding:2px 5px;cursor:pointer;text-decoration:none;border:none;background:none;font-family:'Mukta',sans-serif}
 .hbtn svg{width:22px;height:22px}
 .hbadge{position:absolute;top:-3px;right:0;min-width:16px;height:16px;border-radius:99px;background:#ff3d00;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1.5px solid var(--header);padding:0 3px}
-.loc-bar{background:var(--green-d);padding:6px 14px;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,.15)}
-.loc-bar .loc-text{font-size:12px;font-weight:600;color:#fff;flex:1}
-.loc-change{font-size:11px;font-weight:700;color:#ffeb3b;flex-shrink:0;cursor:pointer}
+.loc-bar{background:var(--green-d);padding:6px 14px;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,.15);cursor:pointer}
+.loc-bar .loc-text{font-size:12px;font-weight:600;color:#fff;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-change{font-size:11px;font-weight:700;color:#ffeb3b;flex-shrink:0}
 .del-strip{background:#fff;padding:9px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border2)}
 .del-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 1.8s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(27,163,69,.5)}50%{box-shadow:0 0 0 5px rgba(27,163,69,0)}}
@@ -74,13 +74,6 @@ img{display:block;max-width:100%;object-fit:cover}
 .mini-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:2px 7px;border-radius:99px;margin-bottom:4px;display:inline-block;background:rgba(255,255,255,.2);color:#fff;width:fit-content}
 .mini-h{font-size:14px;font-weight:700;color:#fff}
 .mini-p{font-size:11px;color:rgba(255,255,255,.8)}
-.promo{margin:0 10px 10px;background:#fff;border-radius:var(--r8);border:1.5px dashed var(--green);padding:14px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
-.promo-left .p-eyebrow{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px}
-.promo-left .p-h{font-size:20px;font-weight:800;color:var(--t1);margin-bottom:2px}
-.promo-left .p-sub{font-size:12px;color:var(--t2)}
-.promo-right{text-align:center}
-.promo-right .p-ico{font-size:38px;margin-bottom:4px}
-.promo-code{background:var(--green-l);border:1.5px dashed var(--green);border-radius:var(--r4);padding:4px 10px;font-size:13px;font-weight:800;color:var(--green-d);letter-spacing:2px;cursor:pointer}
 .trust-row{display:flex;background:#fff;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);margin-bottom:8px}
 .trust-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 8px;border-right:1px solid var(--border2)}
 .trust-item:last-child{border-right:none}
@@ -183,10 +176,11 @@ img{display:block;max-width:100%;object-fit:cover}
       </a>
     </div>
   </div>
-  <div class="loc-bar">
+  <!-- Location bar — address loaded dynamically from API -->
+  <div class="loc-bar" onclick="window.location='account.html#addresses'">
     <span>📍</span>
-    <span class="loc-text">Delivering to <b>Dhanbad, 826001</b> — Bartand</span>
-    <span class="loc-change">Change ▾</span>
+    <span class="loc-text" id="loc-text">Select delivery address</span>
+    <span class="loc-change" id="loc-change">Add ▾</span>
   </div>
 </header>
 
@@ -252,23 +246,28 @@ img{display:block;max-width:100%;object-fit:cover}
     </div>
   </div>
 
-  <div class="promo">
-    <div class="promo-left">
-      <div class="p-eyebrow">🎉 First Order</div>
-      <div class="p-h">₹150 Off</div>
-      <div class="p-sub">On orders above ₹299<br>Min. 3 items!</div>
-    </div>
-    <div class="promo-right">
-      <div class="p-ico">🎁</div>
-      <div class="promo-code" onclick="copyCode('FRESH50')">FRESH50</div>
-    </div>
-  </div>
-
+  <!-- trust row — real content -->
   <div class="trust-row">
-    <div class="trust-item"><div class="trust-ico">⚡</div><div class="trust-t">Fast</div><div class="trust-s">Delivery</div></div>
-    <div class="trust-item"><div class="trust-ico">✅</div><div class="trust-t">Verified</div><div class="trust-s">Sellers</div></div>
-    <div class="trust-item"><div class="trust-ico">🔄</div><div class="trust-t">Easy Returns</div><div class="trust-s">7 days</div></div>
-    <div class="trust-item"><div class="trust-ico">🔒</div><div class="trust-t">Safe Pay</div><div class="trust-s">UPI · COD</div></div>
+    <div class="trust-item">
+      <div class="trust-ico">🚚</div>
+      <div class="trust-t">Free Delivery</div>
+      <div class="trust-s">On orders ₹299+</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico">🔄</div>
+      <div class="trust-t">7-Day Returns</div>
+      <div class="trust-s">Hassle-free</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico">🔒</div>
+      <div class="trust-t">Secure Pay</div>
+      <div class="trust-s">UPI · Card · COD</div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico">🏷️</div>
+      <div class="trust-t">Best Price</div>
+      <div class="trust-s">Guaranteed</div>
+    </div>
   </div>
 
   <div class="sec">
@@ -319,7 +318,6 @@ img{display:block;max-width:100%;object-fit:cover}
   <span class="cart-fab-badge" id="cart-count">0</span>
 </div>
 
-<!-- main.js must be loaded before page script -->
 <script src="static/js/main.js"></script>
 <script>
 // ─── DELIVERY TIMER ───────────────────────────────────────────────────────────
@@ -331,7 +329,7 @@ const _tel = document.getElementById('dtimer');
   setTimeout(_tick, 1000);
 })();
 
-// ─── LOCAL CART (object keyed by product id) ──────────────────────────────────
+// ─── LOCAL CART ───────────────────────────────────────────────────────────────
 function _getCart() {
   try {
     const raw = JSON.parse(localStorage.getItem('is_cart') || '[]');
@@ -376,12 +374,58 @@ function _checkUser() {
   }
 }
 
+// ─── LOAD ADDRESS FROM API ────────────────────────────────────────────────────
+async function loadUserAddress() {
+  const locText   = document.getElementById('loc-text');
+  const locChange = document.getElementById('loc-change');
+
+  if (!Auth.isLoggedIn()) {
+    // Not logged in — prompt to login
+    if (locText)   locText.textContent = 'Login to see delivery address';
+    if (locChange) locChange.textContent = 'Login ▾';
+    return;
+  }
+
+  try {
+    const data  = await api('GET', '/users/addresses');
+    const addrs = data?.data || [];
+
+    if (!addrs.length) {
+      if (locText)   locText.textContent = 'No address saved yet';
+      if (locChange) locChange.textContent = 'Add ▾';
+      return;
+    }
+
+    // prefer default address, else first one
+    const addr = addrs.find(a => a.is_default) || addrs[0];
+
+    // Build display string: "line1, city, state pincode"
+    const parts = [];
+    if (addr.line1)   parts.push(addr.line1);
+    if (addr.city)    parts.push(addr.city);
+    if (addr.state)   parts.push(addr.state);
+    if (addr.pincode) parts.push(addr.pincode);
+
+    const displayAddr = parts.join(', ');
+
+    if (locText) {
+      locText.innerHTML = `Delivering to <b>${escapeHtml(addr.city || addr.line1)}, ${escapeHtml(addr.pincode || '')}</b> — ${escapeHtml(addr.line1 || '')}`;
+    }
+    if (locChange) locChange.textContent = 'Change ▾';
+
+  } catch (e) {
+    // API error — silent fail, keep default text
+    if (locText)   locText.textContent = 'Select delivery address';
+    if (locChange) locChange.textContent = 'Add ▾';
+  }
+}
+
 // ─── CATEGORIES ───────────────────────────────────────────────────────────────
 let _allCats = [];
 
 async function loadCategories() {
   try {
-    const data = await api('GET', '/categories');   // BASE_URL already has /api
+    const data = await api('GET', '/categories');
     _allCats = data?.data || [];
   } catch { _allCats = []; }
   _renderChips();
@@ -502,7 +546,6 @@ function _makeCard(p, wl) {
   </div>`;
 }
 
-
 async function _addCart(id, price, name, img) {
   _cart[id] = { price, qty:1, name, img };
   _saveCart(_cart);
@@ -579,32 +622,20 @@ async function handleSearch(val) {
 function showSR() { const v=document.getElementById('search-input'); if(v?.value) handleSearch(v.value); }
 function hideSR() { const r=document.getElementById('search-results'); if(r) r.style.display='none'; }
 
-// ─── MISC ─────────────────────────────────────────────────────────────────────
-function copyCode(code) {
-  navigator.clipboard?.writeText(code).catch(()=>{});
-  toast('📋 Code '+code+' copied!', 'success');
-}
-
 // ─── PAGE VISIBILITY SYNC ─────────────────────────────────────────────────────
-// cart.html থেকে ফিরলে অথবা অন্য tab থেকে আসলে cart state refresh হবে
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
     const newCart = _getCart();
     _cart = newCart;
     updateCartFab();
-    // product card-গুলো re-render করো যাতে Add/qty button update হয়
-    const grid = document.getElementById('prod-grid');
-    if (grid && grid.children.length > 0 && !grid.querySelector('.skel-card')) {
-      // currently rendered products থেকে re-render করো
-      document.querySelectorAll('.pc[data-pid]').forEach(card => {
-        const id = card.dataset.pid;
-        const price = parseFloat(card.dataset.price);
-        const name  = card.dataset.name;
-        const img   = card.dataset.img;
-        const row   = document.getElementById('ar-' + id);
-        if (row) _refreshRow(id, price, name, img);
-      });
-    }
+    document.querySelectorAll('.pc[data-pid]').forEach(card => {
+      const id    = card.dataset.pid;
+      const price = parseFloat(card.dataset.price);
+      const name  = card.dataset.name;
+      const img   = card.dataset.img;
+      const row   = document.getElementById('ar-' + id);
+      if (row) _refreshRow(id, price, name, img);
+    });
   }
 });
 
@@ -612,6 +643,7 @@ document.addEventListener('visibilitychange', () => {
 _cart = _getCart();
 _checkUser();
 updateCartFab();
+loadUserAddress();   // ← API থেকে real address load
 loadCategories();
 loadProducts('all');
 </script>
